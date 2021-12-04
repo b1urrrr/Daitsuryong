@@ -10,6 +10,8 @@ var product = require('./lib/productHTML.js'); // 물품 관련 html
 
 var app = express() // application 객체 반환
 
+app.use(express.static('public')); // public 폴더에 있는 static file 사용을 위해 추가
+
 app.get('/', function(request, response){
 	var html = template.loginHTML();
 	response.send(html);
