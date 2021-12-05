@@ -15,7 +15,9 @@ const router = express.Router();
 app.set("view engine", "ejs");
 const bodyParser = require("body-parser"); 
 app.use(bodyParser.urlencoded({ extended: true }));
-var session = require('express-session')
+var session = require('express-session');
+const { O_NOFOLLOW } = require('constants');
+var datetime = new Date();
   
 
 app.use(express.static('public')); // public 폴더에 있는 static file 사용을 위해 추가
@@ -40,7 +42,7 @@ app.post('/', function(req, res) {
           if (error) throw error;
           if (results.length > 0) {
               res.redirect('/home');
-			  user = userid; // 로그인에 성공한 user id 담기
+              user = userid; // 로그인에 성공한 user id 담기
               res.end();
           } else {              
               res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); document.location.href="/home";</script>');    
@@ -73,6 +75,23 @@ app.get('/mypage', function(request, response){
 		});
 	});
 })
+
+//건의사항
+
+app.get("/suggestion", function (req, res) {
+    res.render("suggestion.ejs");
+  });
+
+app.post('/suggestion', function(req, res) {
+
+  console.log(req.body);
+  db.query('INSERT INTO suggestion SET ? ', {content: req.body.text, create_date: new Date(), memberID: user }, function(err, results, fields){ 
+    if (err) throw err;
+    console.log(results);
+    res.redirect('/home')
+   });
+
+  });  
 
 app.use(function(req, res, next){
 	res.status(404).send('Sorry can not found that!');
