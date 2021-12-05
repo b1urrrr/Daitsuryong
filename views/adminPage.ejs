@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link rel="stylesheet" type="text/css" href="admin.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <title>다있수룡</title>
+
+    <style>
+      /*관리자 페이지 전체 div*/
+      .admin_container {
+        padding-top: 90px;
+        padding-bottom: 7vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      /*페이지 이름*/
+      .page-title {
+        font-size: 2.5vw;
+        font-weight: bold;
+        margin: 10px;
+        margin-bottom: 5vw;
+      }
+
+      /*부제목*/
+      .sub-title {
+        margin-bottom: 0px;
+        font-size: 1.5vw;
+        font-weight: bold;
+      }
+
+      .line {
+        width: 55vw;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        color: black;
+      }
+
+      /*물품 정보*/
+      .product-manage-container {
+        text-align: center;
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        width: 61vw;
+        margin-bottom: 70px;
+      }
+
+      .img {
+        height: 10rem;
+        background-color: #fdfdfd;
+        border-radius: 10px;
+      }
+
+      .card {
+        height: 350px;
+        padding: 20px;
+        padding-bottom: 0;
+        background-color: #e1d7f4;
+        border: 0;
+        border-radius: 10px;
+        margin: 10px;
+      }
+
+      .card-title {
+        text-align: left;
+        font-size: 1.2vw;
+        font-weight: bold;
+      }
+
+      .count-container {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .btn-circle {
+        width: 50px;
+        height: 50px;
+        margin: 10px;
+        margin-top: 5px;
+        border-radius: 50%;
+        background-color: #ffffff;
+        font-size: 20px;
+        color: #7a7a7a;
+        font-weight: bold;
+      }
+
+      .delete-btn {
+        position: absolute;
+        right: 30px;
+        top: 194px;
+        font-size: 0.9vw;
+        color: #f54646;
+        text-decoration: none;
+      }
+
+      /*물품 추가*/
+      .product-add-btn {
+        text-align: center;
+        margin: 10px;
+        background-color: #f5f5f5;
+        height: 350px;
+        border-radius: 10px;
+        border: 0;
+      }
+
+      .plus-text {
+        font-size: 100px;
+        font-weight: bold;
+        color: #989898;
+      }
+
+      /*통계치*/
+      .statistics-container {
+        width: 61vw;
+        margin-bottom: 70px;
+      }
+
+      .statistics-card {
+        background-color: #f5f5f5;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 20px;
+      }
+
+      .statistics-card > p {
+        margin-left: 40px;
+        text-align: left;
+        color: #2d2d2d;
+        font-size: 1.1vw;
+      }
+
+      .statistics-card p:nth-child(1) {
+        margin-top: 10px;
+        margin-left: 30px;
+        font-size: 1.3vw;
+        font-weight: bold;
+      }
+
+      /*건의사항*/
+      .suggestion-container {
+        width: 61vw;
+        margin-bottom: 70px;
+      }
+
+      .suggestion-card {
+        background-color: #f5f5f5;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 20px;
+      }
+
+      .suggestion-card > p {
+        margin-left: 40px;
+        margin-right: 40px;
+        text-align: left;
+        color: #2d2d2d;
+        font-size: 1.1vw;
+      }
+
+      .suggestion-card p:nth-child(1) {
+        margin-top: 10px;
+        margin-left: 30px;
+        font-size: 1.3vw;
+        font-weight: bold;
+      }
+    </style>
+</head>
+<body>
+  <div class="admin_container">
+    <p class="page-title">관리자 페이지</p>
+    <p class="sub-title">물품 관리</p>
+    <hr class="line" />
+    <div class="product-manage-container">
+      <div class="card" style="width: 18rem">
+        <div class="img"></div>
+        <div class="card-body">
+          <h5 class="card-title">물품명</h5>
+          <form class="count-container">
+            <p>현재 수량 :&nbsp;</p>
+            <p>5</p>
+          </form>
+          <div class="btn-container">
+            <a href="#" class="btn btn-circle">+</a>
+            <a href="#" class="btn btn-circle">-</a>
+          </div>
+          <a href="#" class="delete-btn">삭제하기</a>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem">
+        <div class="img"></div>
+        <div class="card-body">
+          <h5 class="card-title">물품명</h5>
+          <form class="count-container">
+            <p>현재 수량 :&nbsp;</p>
+            <p>5</p>
+          </form>
+          <div class="btn-container">
+            <a href="#" class="btn btn-circle">+</a>
+            <a href="#" class="btn btn-circle">-</a>
+          </div>
+          <a href="#" class="delete-btn">삭제하기</a>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem">
+        <div class="img"></div>
+        <div class="card-body">
+          <h5 class="card-title">물품명</h5>
+          <form class="count-container">
+            <p>현재 수량 :&nbsp;</p>
+            <p>5</p>
+          </form>
+          <div class="btn-container">
+            <a href="#" class="btn btn-circle">+</a>
+            <a href="#" class="btn btn-circle">-</a>
+          </div>
+          <a href="#" class="delete-btn">삭제하기</a>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem">
+        <div class="img"></div>
+        <div class="card-body">
+          <h5 class="card-title">물품명</h5>
+          <form class="count-container">
+            <p>현재 수량 :&nbsp;</p>
+            <p>5</p>
+          </form>
+          <div class="btn-container">
+            <a href="#" class="btn btn-circle">+</a>
+            <a href="#" class="btn btn-circle">-</a>
+          </div>
+          <a href="#" class="delete-btn">삭제하기</a>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem">
+        <div class="img"></div>
+        <div class="card-body">
+          <h5 class="card-title">물품명</h5>
+          <form class="count-container">
+            <p>현재 수량 :&nbsp;</p>
+            <p>5</p>
+          </form>
+          <div class="btn-container">
+            <a href="#" class="btn btn-circle">+</a>
+            <a href="#" class="btn btn-circle">-</a>
+          </div>
+          <a href="#" class="delete-btn">삭제하기</a>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem">
+        <div class="img"></div>
+        <div class="card-body">
+          <h5 class="card-title">물품명</h5>
+          <form class="count-container">
+            <p>현재 수량 :&nbsp;</p>
+            <p>5</p>
+          </form>
+          <div class="btn-container">
+            <a href="#" class="btn btn-circle">+</a>
+            <a href="#" class="btn btn-circle">-</a>
+          </div>
+          <a href="#" class="delete-btn">삭제하기</a>
+        </div>
+      </div>
+
+      <button class="product-add-btn" style="width: 18rem">
+        <p class="plus-text">+</p>
+      </button>
+  </div>
+      
+  <p class="sub-title">대여 내역 통계치</p>
+  <hr class="line" />
+  <div class="statistics-container">
+    <div class="statistics-card">
+      <p>2021년 (100회)</p>
+      <p>- 우산 : 20회</p>
+      <p>- 노트북 충전기 : 10회</p>
+      <p>- 휴대폰 충전기 : 10회</p>
+      <p>- 기타 : 00회</p>
+    </div>
+
+    <div class="statistics-card">
+      <p>2022년 (200회)</p>
+      <p>- 우산 : 40회</p>
+      <p>- 노트북 충전기 : 20회</p>
+      <p>- 휴대폰 충전기 : 20회</p>
+      <p>- 기타 : 00회</p>
+    </div>
+  </div>
+
+  <p class="sub-title">건의 사항</p>
+  <hr class="line" />
+  <div class="suggestion-container">
+    <div class="suggestion-card">
+      <p>2021.11.26. 16:09</p>
+      <p>20190993 : 수룡이 탈도 빌려주세요;;</p>
+    </div>
+
+    <div class="suggestion-card">
+      <p>2021.11.25. 09:56</p>
+      <p>00000000 : 대여 버튼이 안 눌려요</p>
+    </div>
+
+    <div class="suggestion-card">
+      <p>2021.09.24. 12:34</p>
+      <p>20122222 : ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</p>
+    </div>
+  </div>
+</body>
+</html>
