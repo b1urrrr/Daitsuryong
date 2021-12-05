@@ -4,6 +4,8 @@ var url = require("url");
 var template = require("./lib/template.js"); // base.html 코드를 JS 객체로 만들어서 분리!
 var path = require("path"); // 입력 정보 보안을 위해 가지고 옵니다.
 var qs = require("querystring");
+var db = require('./lib/db.js');
+
 
 var app = http.createServer(function (request, response) {
   var _url = request.url;
@@ -21,13 +23,27 @@ var app = http.createServer(function (request, response) {
     }
   } else if (pathname === "/home") {
     // 홈, base.html이 있고 사용자가 어떤 것을 눌렀는지에 따라 다른 것이 보여짐.
-    fs.readFile("home/home.html", "utf8", function (err, content) {
+    fs.readFile("./src/home.html", "utf8", function (err, content) {
       var html = template.baseHTML(content);
       response.writeHead(200);
       response.end(html);
     });
   } else if (pathname === "/suggestion") {
-    fs.readFile("suggestion/suggestion.html", "utf8", function (err, content) {
+    fs.readFile("./src/suggestion.html", "utf8", function (err, content) {
+      var html = template.baseHTML(content);
+      response.writeHead(200);
+      response.end(html);
+    });
+  } 
+  else if (pathname === "/reverse") {
+    fs.readFile("./src/reverse.html", "utf8", function (err, content) {
+      var html = template.baseHTML(content);
+      response.writeHead(200);
+      response.end(html);
+    });
+  } 
+  else if (pathname === "/reverse_check") {
+    fs.readFile("./src/reverse_check.html", "utf8", function (err, content) {
       var html = template.baseHTML(content);
       response.writeHead(200);
       response.end(html);
@@ -39,3 +55,4 @@ var app = http.createServer(function (request, response) {
   }
 });
 app.listen(3000);
+

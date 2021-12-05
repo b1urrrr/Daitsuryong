@@ -54,22 +54,28 @@
             font-weight: 700;
         }
 
+
         /*버튼*/
         .buttonoutter{
             display: flex;
             justify-content: space-evenly;
             height: 40px;
             padding:5px;
+            margin-bottom: 20px;
         }
 
-        button{
+        .reserve_btn{
             color:white;
             width:90px;
             height: 30px;
             font-size: 15px;
             text-align: center;
             font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            justify-content: space-around;
         }
+       
 
         #reserve{
             background-color: #FFB8EF;
@@ -91,6 +97,10 @@
             top:50%;
             margin-left:-150px;
             margin-top:-150px;
+        }
+       
+        .content1{
+            margin-bottom: 30px;
         }
     </style>
 </head>
@@ -132,7 +142,9 @@
                 </form>
             </div>     
             <div class="buttonoutter">
-                <button id="reserve" form="reverseForm">예약</button>
+                <!-- <button id="reserve" type="submit" form="reverseForm" onclick="location.href='/reverse_check'">예약</button > -->
+                <a class="reserve_btn" id="reserve" form="reverseForm" href="/reverse_check">예약</a>
+                <!-- <a href="/home">홈</a> -->
             </div>             
         </div>
     </div>
