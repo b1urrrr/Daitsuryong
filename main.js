@@ -8,6 +8,7 @@ var express = require('express'); // express Node.js 위에서 동작하는 웹 
 var db = require('./lib/db.js'); // db 사용을 위한 설정
 var product = require('./lib/productHTML.js'); // 물품 관련 html
 var ejs = require('ejs');
+var moment = require('moment'); // 날짜 출력 포맷, 설치 필요
 
 var app = express() // applicationn 객체 반환
 const router = express.Router();
@@ -27,7 +28,8 @@ app.get("/", function (req, res) {
   res.render("login.ejs");
 });
 
-var user ='';
+var user = ''; // 로그인한 사용자의 아이디를 저장
+
 //로그인
 app.post('/', function(req, res) {
   var userid = req.body.id;
@@ -40,14 +42,14 @@ app.post('/', function(req, res) {
           if (error) throw error;
           if (results.length > 0) {
               res.redirect('/home');
-              user = userid;
+              user = userid; // 로그인에 성공한 user id 담기
               res.end();
           } else {              
-              res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); document.location.href="/login";</script>');    
+              res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); document.location.href="/home";</script>');    
           }            
-      });
+      });`	`
   } else {        
-      res.send('<script type="tegxt/javascript">alert("username과 password를 입력하세요!"); document.location.href="/login";</script>');    
+      res.send('<script type="text/javascript">alert("username과 password를 입력하세요!"); document.location.href="/home";</script>');    
       res.end();
   }
 });
@@ -59,6 +61,20 @@ app.get('/home', function(request, response){
 	});
 });
 
+// 마이페이지
+app.get('/mypage', function(request, response){
+	console.log(user);
+	db.query(`SELECT * FROM rent INNER JOIN product ON rent.productNum = product.productNum WHERE memberID = ?`,[user], function(error, rent){
+		if(error) throw error;
+		console.log(rent);
+		
+		db.query(`SELECT * FROM reservationtbl WHERE memberID = ?`, [user], function(error2, reservation){
+			if(error2) throw error2;
+			console.log(reservation);
+			response.render('mypage.ejs', {user: user, rent: rent, reservation: reservation, moment: moment});
+		});
+	});
+})
 
 //건의사항
 
@@ -77,6 +93,14 @@ app.post('/suggestion', function(req, res) {
 
   });  
 
+app.use(function(req, res, next){
+	res.status(404).send('Sorry can not found that!');
+}); // 404 오류 처리
+
+app.use(function (err, req, res, next){
+	console.error(err.stack)
+	res.status(500).send('Something broke!')
+}); // Error-handling middleware...
 
 app.listen(3000, function(request, response){
 	console.log('app listening on port 3000');
