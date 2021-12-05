@@ -14,7 +14,9 @@ const router = express.Router();
 app.set("view engine", "ejs");
 const bodyParser = require("body-parser"); 
 app.use(bodyParser.urlencoded({ extended: true }));
-var session = require('express-session')
+var session = require('express-session');
+const { O_NOFOLLOW } = require('constants');
+var datetime = new Date();
   
 
 app.use(express.static('public')); // public 폴더에 있는 static file 사용을 위해 추가
@@ -25,6 +27,7 @@ app.get("/", function (req, res) {
   res.render("login.ejs");
 });
 
+var user ='';
 //로그인
 app.post('/', function(req, res) {
   var userid = req.body.id;
@@ -37,6 +40,7 @@ app.post('/', function(req, res) {
           if (error) throw error;
           if (results.length > 0) {
               res.redirect('/home');
+              user = userid;
               res.end();
           } else {              
               res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); document.location.href="/login";</script>');    
@@ -56,11 +60,23 @@ app.get('/home', function(request, response){
 });
 
 
-//렌더
+//건의사항
 
 app.get("/suggestion", function (req, res) {
     res.render("suggestion.ejs");
   });
+
+app.post('/suggestion', function(req, res) {
+
+  console.log(req.body);
+  db.query('INSERT INTO suggestion SET ? ', {content: req.body.text, create_date: new Date(), memberID: user }, function(err, results, fields){ 
+    if (err) throw err;
+    console.log(results);
+    res.redirect('/home')
+   });
+
+  });  
+
 
 app.listen(3000, function(request, response){
 	console.log('app listening on port 3000');
