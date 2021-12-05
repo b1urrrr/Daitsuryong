@@ -43,7 +43,7 @@ app.post('/', function(req, res) {
           }            
       });
   } else {        
-      res.send('<script type="text/javascript">alert("username과 password를 입력하세요!"); document.location.href="/login";</script>');    
+      res.send('<script type="tegxt/javascript">alert("username과 password를 입력하세요!"); document.location.href="/login";</script>');    
       res.end();
   }
 });
@@ -57,6 +57,13 @@ app.get('/home', function(request, response){
 		response.send(html);
 	});		
 }); // 로그인에 성공한 경우에만 홈으로 이동 가능!!
+
+
+//렌더
+
+app.get("/suggestion", function (req, res) {
+    res.render("suggestion.ejs");
+  });
 
 app.listen(3000, function(request, response){
 	console.log('app listening on port 3000');
