@@ -1,0 +1,30 @@
+{
+  "name": "daitsuryong",
+  "version": "1.0.0",
+  "description": "데이터베이스프로그래밍 팀 프로젝트 \"다있수룡\" 리포지토리입니다.",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/b1urrrr/Daitsuryong.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/b1urrrr/Daitsuryong/issues"
+  },
+  "homepage": "https://github.com/b1urrrr/Daitsuryong#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "mysql": "^2.18.1",
+    "querystring": "^0.2.1"
+  }
+}

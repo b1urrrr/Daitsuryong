@@ -1,29 +1,76 @@
 <!DOCTYPE html>
-			<html lang="ko">
-			<head>
-				<meta charset="UTF-8">
-				<meta http-equiv="X-UA-Compatible" content="IE=edge">
-				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				<link rel="stylesheet" href="/css/login.css">
-				<title>다있수룡</title>
-			</head>
-			<body>
-				<div class="paper">
-					<div class="login_box">
-						<img src="/img/logo.png" alt="다있수룡" width=200>
-						<h1>Login</h1>
-						<form action="" method="POST">
-							<p><input class="login_input" type="text" placeholder="ID"></p>
-							<p><input class="login_input" type="password" placeholder="Password"></p>
-							<button class="login_btn"type="submit"><b>로그인</b></button>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다있수룡</title>
 
-							<div class="find">
-								<a href="">이용 안내</a>
-								<a href="">비밀번호 찾기</a>
-								<a href="/home">홈</a>
-							</div>
-						</form>
-					</div>
-				</div>
-			</body>
-			</html>
+    <style>
+        /*가장 바깥쪽 div*/
+        .paper{
+            height: 95vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /*로그인 폼을 감싸는 div*/
+        .login_box{
+            background-color: #FDFDFD;
+            border: solid #EEEEEE;
+            padding: 6vw 8vw;
+            text-align: center;
+            color: #CABBE9;
+        }
+        /*아이디 및 비밀번호 입력창*/
+        .login_input{
+            border: solid #CABBE9;
+            width: 200px;
+            height: 20px;
+            padding: 5px;
+        }
+        .login_input:focus{
+            outline: solid #FFCEF3;
+        }
+        /*로그인 버튼*/
+        .login_btn{
+            border: solid #CABBE9;
+            border-radius: 5%;
+            width: 215px;
+            height: 40px;
+            padding: 5px;
+            background-color: #CABBE9;
+            color:#FDFDFD;
+            cursor: pointer;
+        }
+        /*링크를 감싸는 div*/
+        .find{
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .find > a{
+            text-decoration: none;
+            color: #CABBE9;
+        }
+    </style>
+</head>
+<body>
+    <div class="paper">
+        <div class="login_box">
+            <img src="img/daitsuryong.png" alt="다있수룡" width=200>
+            <h1>Login</h1>
+            <form action="" method="POST">
+                <p><input name="id" class="login_input" type="text" placeholder="ID"></p>
+                <p><input name="pw" class="login_input" type="password" placeholder="Password"></p>
+                <button class="login_btn"type="submit"><b>로그인</b></button>
+
+                <div class="find">
+                    <a href="">이용 안내</a>
+                    <a href="">비밀번호 찾기</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
