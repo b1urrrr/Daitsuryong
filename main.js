@@ -1,25 +1,15 @@
-var http = require('http');
-var fs = require('fs');
-var url = require('url');
-var template = require('./lib/template.js'); // base.html 코드를 JS 객체로 만들어서 분리!
-var path = require('path'); // 입력 정보 보안을 위해 가지고 옵니다.
-var qs = require('querystring');
 var express = require('express'); // express Node.js 위에서 동작하는 웹 프레임워크
 var db = require('./lib/db.js'); // db 사용을 위한 설정
-var product = require('./lib/productHTML.js'); // 물품 관련 html
-var ejs = require('ejs');
+var ejs = require('ejs'); // ejs 사용
 var moment = require('moment'); // 날짜 출력 포맷, 설치 필요
-
-var app = express() // applicationn 객체 반환
 const router = express.Router();
-app.set("view engine", "ejs");
-const bodyParser = require("body-parser"); 
-app.use(bodyParser.urlencoded({ extended: true }));
+const bodyParser = require("body-parser");
 var session = require('express-session');
 const { O_NOFOLLOW } = require('constants');
-var datetime = new Date();
-  
 
+var app = express() // applicationn 객체 반환
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public')); // public 폴더에 있는 static file 사용을 위해 추가
 app.set('view engine', 'ejs')
 
@@ -35,8 +25,8 @@ app.post('/', function(req, res) {
   var userid = req.body.id;
   var password = req.body.pw;
 
-  console.log(req.body.id);
-  console.log(req.body.pw);
+  // console.log(req.body.id);
+  // console.log(req.body.pw);
   if (userid && password) {
       db.query('SELECT * FROM membertbl WHERE memberid = ? AND password = ?', [userid, password], function(error, results, fields) {
           if (error) throw error;
@@ -63,14 +53,16 @@ app.get('/home', function(request, response){
 
 // 마이페이지
 app.get('/mypage', function(request, response){
-	console.log(user);
+  console.log("session:", request.body)
+  console.log("session:", request.session)
+	// console.log(user);
 	db.query(`SELECT * FROM rent INNER JOIN product ON rent.productNum = product.productNum WHERE memberID = ?`,[user], function(error, rent){
 		if(error) throw error;
-		console.log(rent);
+		// console.log(rent);
 		
 		db.query(`SELECT * FROM reservationtbl WHERE memberID = ?`, [user], function(error2, reservation){
 			if(error2) throw error2;
-			console.log(reservation);
+			// console.log(reservation);
 			response.render('mypage.ejs', {user: user, rent: rent, reservation: reservation, moment: moment});
 		});
 	});
