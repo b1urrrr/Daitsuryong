@@ -6,12 +6,27 @@ const router = express.Router();
 const bodyParser = require("body-parser");
 var session = require('express-session');
 const { O_NOFOLLOW } = require('constants');
+const multer = require('multer'); // 이미지 업로드를 위한 모듈
+const path = require('path');
 
 var app = express() // applicationn 객체 반환
+
+var storage = multer.diskStorage({
+  destination: function(req, file, cb){
+    cb(null, 'public/img/'); // public/img 폴더에 이미지 저장
+  },
+  filename: function(req, file, cb){
+    const ext = path.extname(file.originalname); // 파일 확장자
+    cb(null, path.basename(file.originalname, ext)+ "-" + Date.now() + ext); // 파일을 추가한 날짜를 포함해 파일명 작성
+  },
+});
+
+var upload = multer({storage: storage});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public')); // public 폴더에 있는 static file 사용을 위해 추가
 app.set('view engine', 'ejs')
+
 
  // 루트 경로로 접속 시 로그인 페이지로 이동
 app.get("/", function (req, res) {
@@ -37,7 +52,7 @@ app.post('/', function(req, res) {
           } else {              
               res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); document.location.href="/home";</script>');    
           }            
-      });`	`
+      });
   } else {        
       res.send('<script type="text/javascript">alert("username과 password를 입력하세요!"); document.location.href="/home";</script>');    
       res.end();
@@ -83,7 +98,26 @@ app.post('/suggestion', function(req, res) {
     res.redirect('/home')
    });
 
-  });  
+}); 
+
+// 물품 추가, 일단 DB에 이미지 저장하려고 만들었음.
+app.get("/addProduct", function(req, res){
+  res.render('createProduct.ejs');
+});
+
+app.post("/addProduct", upload.single('img'), function(req, res, next){
+  let productNum = req.body.productNum;
+  let productName = req.body.productName;
+  let productStatus = 1; // 처음에는 무조건 물품 상태를 1로 설정...
+  let img = `/img/${req.file.filename}`; // 이미지 경로
+  
+  db.query('INSERT INTO product VALUES (?, ?, ?, ?)', [productNum, productName, productStatus, img], function(err, result){
+    if(err){
+      throw err;
+    }
+    res.redirect('/home');
+  });
+});
 
 app.use(function(req, res, next){
 	res.status(404).send('Sorry can not found that!');
