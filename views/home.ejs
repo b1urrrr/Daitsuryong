@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <%-include ('baseHead.ejs')%>       
+    </head>
+
+    <body>
+      <%-include ('nav.ejs')%>
+    <div class="container" style="padding-top: 90px; padding-bottom: 90px;">
+      <div class="introduce">
+        <h2>서비스 소개하는 글 또는 이미지</h2> 
+      </div>
+
+      <div class="cardlist">
+        <% for (var i = 0; i < num; i++) {%>
+          <div class="cardoutter" style="width: 18rem;">
+            <img src="<%=product[i].productImg%>" class="productimg" alt="물품">
+            <div class="card-body">
+              <h5 class="card-title"><%=product[i].productName %></h5>
+                <p class="card-text">수량: <%=product[i].counts%></p>
+                <% if(product[i].counts == 0){ %>
+                  <button href="#" class="homeBtn btn-reserve">예약</button>
+                <%}%>
+                <%if(product[i].counts > 0){%>
+                  <button href="#" class="homeBtn btn-borrow">대여</button>
+                <% } %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+    <%-include ('footer.ejs')%>
+  </body>
+</html>
