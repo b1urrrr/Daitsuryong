@@ -55,11 +55,12 @@ app.post("/", function (req, res) {
               user = userid; // 로그인에 성공한 user id 담기
               res.end();
           } else {              
-              res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); document.location.href="/home";</script>');    
+              res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); document.location.href="/";</script>'); 
+                 
           }            
       });
   } else {        
-      res.send('<script type="text/javascript">alert("username과 password를 입력하세요!"); document.location.href="/home";</script>');    
+      res.send('<script type="tegxt/javascript">alert("username과 password를 입력하세요!"); document.location.href="/";</script>');    
       res.end();
   }
 });
