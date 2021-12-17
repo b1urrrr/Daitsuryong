@@ -43,11 +43,12 @@ app.post('/', function(req, res) {
               user = userid;
               res.end();
           } else {              
-              res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); document.location.href="/login";</script>');    
+              res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); document.location.href="/";</script>'); 
+                 
           }            
       });
   } else {        
-      res.send('<script type="tegxt/javascript">alert("username과 password를 입력하세요!"); document.location.href="/login";</script>');    
+      res.send('<script type="tegxt/javascript">alert("username과 password를 입력하세요!"); document.location.href="/";</script>');    
       res.end();
   }
 });
