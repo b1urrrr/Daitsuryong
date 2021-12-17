@@ -24,6 +24,10 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+<<<<<<< HEAD
+=======
+    "moment": "^2.29.1",
+>>>>>>> 1064d5b814fff476871d911812b9a67dcad4f1e2
     "multer": "^1.4.4",
     "mysql": "^2.18.1",
     "querystring": "^0.2.1"

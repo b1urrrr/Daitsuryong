@@ -1,0 +1,161 @@
+/*관리자 페이지 전체 div*/
+.admin_container {
+  padding-top: 90px;
+  padding-bottom: 7vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/*페이지 이름*/
+.page-title {
+  font-size: 2.5vw;
+  font-weight: bold;
+  margin: 10px;
+  margin-bottom: 5vw;
+}
+
+/*부제목*/
+.sub-title {
+  margin-bottom: 0px;
+  font-size: 1.5vw;
+  font-weight: bold;
+}
+
+.line {
+  width: 55vw;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  color: black;
+}
+
+/*물품 정보*/
+.product-manage-container {
+  text-align: center;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  width: 61vw;
+  margin-bottom: 70px;
+}
+
+.img {
+  height: 10rem;
+  background-color: #fdfdfd;
+  border-radius: 10px;
+}
+
+.btn-circle {
+  width: 50px;
+  height: 50px;
+  margin: 10px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  font-size: 20px;
+  color: #7a7a7a;
+  font-weight: bold;
+}
+
+.card {
+  height: 350px;
+  padding: 20px;
+  padding-bottom: 0;
+  background-color: #e1d7f4;
+  border: 0;
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.card-title {
+  text-align: left;
+  font-size: 1.2vw;
+  font-weight: bold;
+}
+
+.count-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.delete-btn {
+  position: absolute;
+  right: 30px;
+  top: 194px;
+  font-size: 0.9vw;
+  color: #f54646;
+  text-decoration: none;
+}
+
+/*물품 추가*/
+.product-add-btn {
+  text-align: center;
+  margin: 10px;
+  background-color: #f5f5f5;
+  height: 350px;
+  border-radius: 10px;
+  border: 0;
+}
+
+.plus-text {
+  font-size: 100px;
+  font-weight: bold;
+  color: #989898;
+}
+
+/*통계치*/
+.statistics-container {
+  width: 61vw;
+  margin-bottom: 70px;
+}
+
+.statistics-card {
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 20px;
+}
+
+.statistics-card > p {
+  margin-left: 40px;
+  text-align: left;
+  color: #2d2d2d;
+  font-size: 1.1vw;
+}
+
+.statistics-card p:nth-child(1) {
+  margin-top: 10px;
+  margin-left: 30px;
+  font-size: 1.3vw;
+  font-weight: bold;
+}
+
+/*건의사항*/
+.suggestion-container {
+  width: 61vw;
+  margin-bottom: 70px;
+}
+
+.suggestion-card {
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 20px;
+}
+
+.suggestion-card > p {
+  margin-left: 40px;
+  margin-right: 40px;
+  text-align: left;
+  color: #2d2d2d;
+  font-size: 1.1vw;
+}
+
+.suggestion-card p:nth-child(1) {
+  margin-top: 10px;
+  margin-left: 30px;
+  font-size: 1.3vw;
+  font-weight: bold;
+}
