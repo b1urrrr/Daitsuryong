@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <%-include ('baseHead.ejs')%>
+    <link rel="stylesheet" href="/css/admin.css" />
+  </head>
+  <body>
+    <%-include ('nav.ejs')%>
+    <div class="admin_container">
+      <p class="page-title">관리자 페이지</p>
+      <p class="sub-title">물품 관리</p>
+      <hr class="line" />
+      <div class="product-manage-container">
+        <% for (var i = 0; i < num; i++) {%>
+        <div class="card" style="width: 18rem">
+          <div class="img"></div>
+          <div class="card-body">
+            <h5 href="/admin/manage" class="card-title">
+              <%=product[i].productName%>
+            </h5>
+            <form class="count-container">
+              <p>현재 수량 :&nbsp;</p>
+              <p><%=product[i].counts%></p>
+            </form>
+            <div class="btn-container">
+              <a href="#" class="btn btn-circle">+</a>
+              <a href="#" class="btn btn-circle">-</a>
+            </div>
+            <a href="#" class="delete-btn">삭제하기</a>
+          </div>
+        </div>
+        <% } %>
+
+        <button class="product-add-btn" style="width: 18rem">
+          <p class="plus-text">+</p>
+        </button>
+      </div>
+
+      <p class="sub-title">대여 내역 통계치</p>
+      <hr class="line" />
+      <div class="statistics-container">
+        <div class="statistics-card">
+          <p>2021년 (100회)</p>
+          <p>- 우산 : 20회</p>
+          <p>- 노트북 충전기 : 10회</p>
+          <p>- 휴대폰 충전기 : 10회</p>
+          <p>- 기타 : 00회</p>
+        </div>
+
+        <div class="statistics-card">
+          <p>2022년 (200회)</p>
+          <p>- 우산 : 40회</p>
+          <p>- 노트북 충전기 : 20회</p>
+          <p>- 휴대폰 충전기 : 20회</p>
+          <p>- 기타 : 00회</p>
+        </div>
+      </div>
+
+      <p class="sub-title">건의 사항</p>
+      <hr class="line" />
+      <div class="suggestion-container">
+        <% for (var i = 0; i < count; i++) {%>
+        <div class="suggestion-card">
+          <p>
+            <%=moment(suggestion[i].create_date).format('YYYY.MM.DD. hh:mm');%>
+          </p>
+          <p><%=suggestion[i].user_id%> : <%=suggestion[i].content%></p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <%-include ('footer.ejs')%>
+  </body>
+</html>
