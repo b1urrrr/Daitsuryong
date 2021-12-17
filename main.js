@@ -41,7 +41,7 @@ app.get("/", function (req, res) {
 var user = ''; // 로그인한 사용자의 아이디를 저장
 
 //로그인
-app.post('/', function(req, res) {
+app.post("/", function (req, res) {
   var userid = req.body.id;
   var password = req.body.pw;
 
@@ -123,8 +123,31 @@ app.post("/addProduct", upload.single('img'), function(req, res, next){
   });
 });
 
+// 관리자 페이지
 app.get("/admin", function (req, res) {
-  res.render("adminPage.ejs");
+  db.query(`SELECT * FROM productinfo`, function (error, products) {
+    if (error) throw error; // 오류 처리
+    db.query(`SELECT * FROM suggestion`, function (error2, suggestions) {
+      if (error2) throw error2;
+      res.render("adminPage.ejs", {
+        product: products,
+        num: products.length,
+        suggestion: suggestions,
+        count: suggestions.length,
+        moment: moment,
+      });
+    });
+  });
+});
+
+app.get("/admin/manage", function (req, res) {
+  db.query(`SELECT * FROM productinfo`, function (error, products) {
+    if (error) throw error; // 오류 처리
+    response.render("rentManage.ejs", {
+      product: products,
+      num: products.length,
+    });
+  });
 });
 
 app.use(function(req, res, next){
