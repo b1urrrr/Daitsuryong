@@ -60,27 +60,26 @@ app.post('/', function(req, res) {
 });
 
 app.get('/home', function(request, response){
-	db.query(`SELECT * FROM productinfo`, function(error, products){
+	db.query(`SELECT * FROM info`, function(error, products){
 		if (error) throw error; // 오류 처리
 		response.render('home.ejs', {product: products, num: products.length});
 	});
 });
 
 // 마이페이지
-app.get('/mypage', function(request, response){
-  console.log("session:", request.body)
-  console.log("session:", request.session)
-	// console.log(user);
-	db.query(`SELECT * FROM rent INNER JOIN product ON rent.productNum = product.productNum WHERE memberID = ?`,[user], function(error, rent){
+app.get('/mypage', async function(request, response){
+  rent = []
+  reservation = []
+  db.query(`SELECT * FROM rent INNER JOIN productInfo ON rent.productCode = productInfo.productCode WHERE memberID = ?`,[user], function(error, result){
 		if(error) throw error;
-		// console.log(rent);
-		
-		db.query(`SELECT * FROM reservationtbl WHERE memberID = ?`, [user], function(error2, reservation){
-			if(error2) throw error2;
-			// console.log(reservation);
-			response.render('mypage.ejs', {user: user, rent: rent, reservation: reservation, moment: moment});
-		});
+		rent = result;
 	});
+
+  db.query(`SELECT * FROM reservationtbl WHERE memberID = ?`, [user], function(error2, result){
+    if(error2) throw error2;
+    reservation = result;
+  });
+  response.render('mypage.ejs', {user: user, rent: rent, reservation: reservation, moment: moment});
 })
 
 //건의사항
