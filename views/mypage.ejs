@@ -12,13 +12,12 @@
                 <h1>마이페이지</h1>
             </div>
             <div class = "outter">
-           
                 <div class="my">
                     <div class="myInfo">회원정보</div>
                     <div class="studentId">학번 : <%=user %></div>
                     <div class="status">
-                        <div class="reservation">예약중 : <%=rent.length %></div>
-                        <div class="borrowing"> 대여중 : <%=reservation.length %></div>
+                        <div class="reservation">예약중 : <%=reservation.length %></div>
+                        <div class="borrowing"> 대여중 : <%=rent.length %></div>
                     </div>
                 </div>   
 
@@ -28,7 +27,6 @@
                     <ol class="list-group ">
                         <% for (var i = 0; i < rent.length; i++){ %>
                             <li class=" d-flex justify-content-between align-items-start list">
-                                <img src="img/우산.png" class="productimg listImg" alt="...">
                                 <div class="ms-2 me-auto">
                                     <div class="productName"><%=rent[i].productName%></div>
                                     <div class="term">대여날짜: <%= moment(rent[i].rent_date).format('YYYY-M-D'); %> </div>
@@ -36,6 +34,15 @@
                                 </div>
                             </li>
                         <% } %>
+                        
+                        <% if (rent.length == 0){ %>
+                            <li class=" d-flex justify-content-between align-items-start list">
+                                <div class="ms-2 me-auto">
+                                    <p>대여한 물품이 없습니다.</p>
+                                </div>
+                            </li>
+                        <% } %>
+            
                     </ol>
                 </div>    
             </div>
