@@ -111,3 +111,5 @@ dist
 package-lock.json
 
 /lib/db.js
+
+package.json
