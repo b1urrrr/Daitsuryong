@@ -8,6 +8,11 @@ var session = require('express-session');
 const { O_NOFOLLOW } = require('constants');
 const multer = require('multer'); // 이미지 업로드를 위한 모듈
 const path = require('path');
+var http = require("http");
+var fs = require("fs");
+var url = require("url");
+var template = require("./lib/template.js"); // base.html 코드를 JS 객체로 만들어서 분리!
+var qs = require("querystring");
 
 var app = express() // applicationn 객체 반환
 
@@ -118,6 +123,10 @@ app.post("/addProduct", upload.single('img'), function(req, res, next){
   });
 });
 
+app.get("/admin", function (req, res) {
+  res.render("adminPage.ejs");
+});
+
 app.use(function(req, res, next){
 	res.status(404).send('Sorry can not found that!');
 }); // 404 오류 처리
@@ -127,6 +136,6 @@ app.use(function (err, req, res, next){
 	res.status(500).send('Something broke!')
 }); // Error-handling middleware...
 
-app.listen(3000, function(request, response){
-	console.log('app listening on port 3000');
+app.listen(3000, function (request, response) {
+  console.log("app listening on port 3000");
 });
