@@ -73,91 +73,87 @@ app.get('/home', function(request, response){
 	});
 });
 
- //대여 페이지
- app.post('/rent', function(req, res,next){
-     var value = req.body.value;
-     var datepicker = req.body.datepicker;
-     var datas = [ value, datepicker];
+// productName(대여 물품 이름), productCode(대여 물품 종류) 가져오기
+app.get('/rent/:name/:code', function(req, res){
+  var productName = req.params.name; // 전달 받은 대여 물품 이름
+  var productCode = req.params.code; // 전달 받은 대여 물품 종류
+  var date_current = Date.now()
 
-    db.query(`SELECT * FROM productinfo`, function(error, products){
-        console.log("productName");
-		if (error) throw error; // 오류 처리
-        req.on('end', function(){
-            var post = qs.parse(body);
-            db.query(`INSERT INTO rent (rentID, rent_date, rent_state, memberID, productNum) VALUES ("?",NOW(),"신청완료","20190958","101")`, 
-            [post.datepicker],
-            function(error2, rent){
-                res.render('rent.ejs', {product: products, num: products.length});
-        })
-      
-        })
-	    // res.render('rent.ejs', {product: products, num: products.length});
-    
-    });
-    // res.render("rent.ejs");
-    // res.render('rent.ejs', {product: products, num: products.length});
-    
- });  // 대여버튼 누르면 대여 페이지로 이동
+  res.render('rent.ejs', {product_name: productName, product_code: productCode, date: date_current, moment: moment})
+});  // 대여버튼 누르면 대여 프로세스 작동
 
+//대여
+app.post('/rent', function(req, res, next){
+  var productCode = req.body.productCode; // 대여할 물품 종류를 나타내는 코드
+  var num = 0
 
- // productName 이름 가져오기
+  db.beginTransaction(function(err){
+    if (err) next(err);
+    db.query(`SELECT * FROM product where productStatus=1 and productCode=?`, [productCode], function(err1, product){
+      if (err1) next(err); 
+      num = product[0].productNum; // 현재 대여 가능한 물품 정보 가져오기
 
- app.get('/rent/:productName', function(req, res){
-     var name = path.parse(req.params.productName).base;
-     console.log(name);
+      db.query('UPDATE product SET productStatus=0 where productNum=?', [num], function(err2){ // product 테이블 업데이트 
+        if (err2){
+          return db.rollback(function(){
+            next(err);
+          });
+        } // 업데이트 오류
 
-    db.query(`SELECT * FROM productinfo`, function(error, products){
-		if (error) throw error; // 오류 처리
-		res.render('rent.ejs', {product: products, product_name: name});
-        res.render(name);
-       
-	});
-    // res.render("rent.ejs");
-    
- });  // 대여버튼 누르면 대여 페이지로 이동
+        db.query('INSERT INTO rent VALUE(null, now(), "신청완료", ?, ?, ?)', [user, productCode, num], function(err3){ // rent 테이블에 삽입
+          if (err3){
+            return db.rollback(function(){
+              next(err);
+            });
+          } // 삽입 오류
 
+          db.commit(function(err4){
+            if(err4){
+              return db.rollback(function(){
+                next(err);
+              });
+            }
+            console.log('success!')
+          });
+        }); // rent 테이블에 데이터 추가
+      }); // product 테이블 업데이트
+    }); // 물품 정보 가져오는 SQL
+  }); // transaction 사용하기
 
+  res.redirect('/home');
+}); // 일단 대여가 완료되면 홈으로 이동...
 
 //예약 페이지
 
-app.get('/reverse', function(req, res){
+// app.get('/reverse', function(req, res){
 
-    res.render("reverse.ejs");
+//     res.render("reverse.ejs");
     
- });  // 예약버튼 누르면 예약 페이지로 이동
+//  });  // 예약버튼 누르면 예약 페이지로 이동
 
 
- app.get('/rent_check', function(req, res){
+//  app.get('/rent_check', function(req, res){
  
-    res.render("rent_check.ejs");
+//     res.render("rent_check.ejs");
     
- });  // 대여확인 누르면 대여 체크 페이지로 이동
+//  });  // 대여확인 누르면 대여 체크 페이지로 이동
  
- app.get('/reverse_check', function(req, res){
+//  app.get('/reverse_check', function(req, res){
  
-    res.render("reverse_check.ejs");
+//     res.render("reverse_check.ejs");
     
- });  // 예약확인 누르면 예약 체크 페이지로 이동
+//  });  // 예약확인 누르면 예약 체크 페이지로 이동
  
-
-app.listen(3000, function(request, response){
-	console.log('app listening on port 3000');
-});
-
 // 마이페이지
-app.get('/mypage', async function(request, response){
-  rent = []
-  reservation = []
-  db.query(`SELECT * FROM rent INNER JOIN productInfo ON rent.productCode = productInfo.productCode WHERE memberID = ?`,[user], function(error, result){
+app.get('/mypage', function(request, response){
+  db.query(`SELECT * FROM rent INNER JOIN productInfo ON rent.productCode = productInfo.productCode WHERE memberID = ?`,[user], function(error, rent){
 		if(error) throw error;
-		rent = result;
-	});
 
-  db.query(`SELECT * FROM reservationtbl WHERE memberID = ?`, [user], function(error2, result){
-    if(error2) throw error2;
-    reservation = result;
-  });
-  response.render('mypage.ejs', {user: user, rent: rent, reservation: reservation, moment: moment});
+    db.query(`SELECT * FROM reservationtbl WHERE memberID = ?`, [user], function(error2, reservation){
+      if(error2) throw error2;
+      response.render('mypage.ejs', {user: user, rent: rent, reservation: reservation, moment: moment});
+    });
+	});
 })
 
 //건의사항
@@ -198,7 +194,7 @@ app.post("/addProduct", upload.single('img'), function(req, res, next){
 
 // 관리자 페이지
 app.get("/admin", function (req, res) {
-  db.query(`SELECT * FROM productinfo`, function (error, products) {
+  db.query(`SELECT * FROM info`, function (error, products) {
     if (error) throw error; // 오류 처리
     db.query(`SELECT * FROM suggestion`, function (error2, suggestions) {
       if (error2) throw error2;
@@ -214,9 +210,9 @@ app.get("/admin", function (req, res) {
 });
 
 app.get("/admin/manage", function (req, res) {
-  db.query(`SELECT * FROM productinfo`, function (error, products) {
+  db.query(`SELECT * FROM info`, function (error, products) {
     if (error) throw error; // 오류 처리
-    response.render("rentManage.ejs", {
+    res.render("rentManage.ejs", {
       product: products,
       num: products.length,
     });

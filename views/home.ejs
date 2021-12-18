@@ -22,7 +22,7 @@
                   <button onclick="location.href='/reverse';" class="homeBtn btn-reserve">예약</button>
                 <%}%>
                 <%if(product[i].counts > 0){%>
-                  <button onclick="location.href='/rent/<%=product[i].productName %> ';" class="homeBtn btn-borrow">대여</button>
+                  <button onclick="location.href='/rent/<%=product[i].productName%>/<%=product[i].productCode%>';" class="homeBtn btn-borrow">대여</button>
                 <% } %>
             </div>
           </div>
