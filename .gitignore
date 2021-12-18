@@ -109,6 +109,6 @@ dist
 .vscode-test
 
 package-lock.json
-pakage.json
+package.json
 
 /lib/db.js
