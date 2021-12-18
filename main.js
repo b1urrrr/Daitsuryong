@@ -11,7 +11,6 @@ const path = require('path');
 var http = require("http");
 var fs = require("fs");
 var url = require("url");
-var template = require("./lib/template.js"); // base.html 코드를 JS 객체로 만들어서 분리!
 var qs = require("querystring");
 
 var app = express() // applicationn 객체 반환
