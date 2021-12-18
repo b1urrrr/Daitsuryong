@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <%-include ('baseHead.ejs')%>
+        <link rel="stylesheet" href="/css/rent_reserve.css"/> 
+    </head>
+
+<body>
+<%-include ('nav.ejs')%>
+<div class="container" style="padding-top: 90px; padding-bottom: 90px;">
+    <!-- 수룡이 사진 div -->
+    <div class="wrapper">
+        <img src="/img/suryong.png" alt="수룡" class="formImg">
+    </div>
+
+    <div class="content1">
+        <div class="block1-2">
+            <div class="block1-3"><br>
+                <form action="/reserve" method="POST" style="text-align: center;">
+                    <input type="hidden" value="<%=product_code%>" name="productCode">
+                    <h5>예약하려는 물품이 맞는지 확인해주세요.</h5>
+                    <p>
+                        <strong>
+                            물품명 : <%=product_name %><br>
+                            신청일자: <%=moment(date).format('YYYY-M-D'); %>
+                        </strong>
+                    </p>
+                    <p><strong>대기 순서 : <%=counts + 1%>번째</strong></p>
+
+                    <div class="buttonoutter">
+                        <button onclick="location.href='/reserve';" class="homeBtn btn-reserve">예약</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%-include ('footer.ejs')%>
+</body>
+</html>

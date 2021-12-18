@@ -1,6 +1,11 @@
+h4{
+    color: #767676;
+    text-align: center;
+}
+
 .mypage{
     text-align: center;
-    padding: 40px;
+    padding: 20px 0px 60px 0px;
 }
 
 .outter{
@@ -9,26 +14,24 @@
 }
 
 /*나의 정보*/
-.my{
+.info{
+    flex-grow:1;
+}
+.infoBox{
     background-color: #E5E5E5;
     width: 260px;
-    height: 175px;
+    height: 220px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    border: 0.5px solid black;
     margin-right: 70px;
-}
-.myInfo {
-    margin-bottom: 7px;
-    color: #767676;
 }
 
 .status{
     background-color: white;
     width: 200px;
-    height:80px;
+    height:90px;
     margin-left: 30px;
     font-size: 25px;
     justify-content: center;
@@ -36,19 +39,42 @@
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
-h4{
-    color: #767676;
-    text-align: center;
+/*대여한 물품 리스트*/
+.history{
+    flex-grow: 4;
 }
 
-/*대여한 물품 리스트*/
+.historyList{
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .list{
     background-color: #E1D7F4;
     padding: 15px 40px 10px 25px ;
     border: 1px solid #E1D7F4;
     border-radius: 5px;
-    margin-bottom: 20px;
+    margin: 10px 20px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    flex-grow: 1;
+    display: flex;
+}
+
+.list2{
+    padding: 23px 10px 2px 230px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    margin: 10px 20px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    flex-grow: 1;
+}
+
+.emptyList{
+    background-color: #E1D7F4;
+    padding: 40px;
+    border: 1px solid #E1D7F4;
+    border-radius: 5px;
+    flex-grow: 1;
 }
 
 .listImg{

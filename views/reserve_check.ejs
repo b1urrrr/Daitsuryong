@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%-include ('baseHead.ejs')%>
+    <link rel="stylesheet" href="/css/rent_reserve.css"/>
+</head>
+
+<body>
+<%-include ('nav.ejs')%>
+<div class="container" style="padding-top: 90px; padding-bottom: 90px;">
+    <!-- 수룡이 사진 div -->
+    <div class="wrapper">
+        <img src="/img/suryong.png" alt="수룡" class="formImg">
+    </div>
+
+    <div class="content1">       
+        <div class="outer" >
+            <div class="inner" style="text-align: center;"><br>
+                <p><strong>예약번호 : <%=reservation_id%></strong></p>
+                <p><strong>예약물품 : <%=reservation_name%></strong></p>
+                <img class="productimg" src="<%=reservation_img%>">
+                <p><strong>물품이 반납되면 예약을 신청한 순서대로 대여 기회가 주어집니다.</strong></p>
+                
+                <div class="buttonoutter">
+                    <button onclick="location.href='/home';" id="rentcheck">확인</button>
+                    <form action="/reserve_cancel" method="POST">
+                        <input type="hidden" name="key" value="<%=reservation_id%>">
+                        <button id="cancel">예약취소</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%-include ('footer.ejs')%>
+</body>
+</html>

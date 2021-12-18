@@ -1,142 +1,35 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <head>
-        <%-include ('baseHead.ejs')%>  
-        <style>
-            /*수룡이 이미지*/
-            .wrapper{
-                width:200px;
-                height: 200px;
-                margin:0 auto;
-            }
-    
-            .formImg{
-                width:100%;
-                height:100%;
-                object-fit: cover;
-            }
-    
-            /*form*/
-            .block1-2 {
-                flex-direction: column;
-                width: 50%;
-                height: 330px;
-                margin-bottom: 30px;
-                justify-content:center;
-                align-items: center;
-                background-color: #CABBE9;
-                display: flex;
-                margin:0 auto;
-                border-radius : 20px;
-            }
-            .block1-3 {
-                width: 95%;
-                height: 230px;
-                margin: auto;
-                border-radius : 20px;
-                background-color: #FFFFFF;
-            }
-    
-            h3{
-                font-size: 100%;
-                font-style: bold;
-                font-weight: 700;
-            }
-           
-            /*버튼*/
-            .buttonoutter{
-                display: flex;
-                justify-content: space-evenly;
-                height: 40px;
-                padding:5px;
-            }
-            button{
-                color:white;
-                width:90px;
-                height: 30px;
-                font-size: 15px;
-                text-align: center;
-                font-weight: 700;
-                
-            }
-            #rent{
-                background-color: #93EBFF;
-                border:1px solid #93EBFF;
-                border-radius:10%;
-            }
-            
-            /* img.static{
-                position: static;
-            } */
-    
-            /*뭔지 모르겠음..*/
-            #wrap{
-                width:100%;
-                height:100%;
-                position:relative;
-            } 
-            #wrap .box{ 
-                width:300px;
-                height:300px;
-                position:absolute;
-                left:50%;
-                top:50%;
-                margin-left:-150px;
-                margin-top:-150px;
-            }
-            .content1{
-            margin-bottom: 30px;
-        }
-
-        </style>     
-     </head>
+    <%-include ('baseHead.ejs')%>
+    <link rel="stylesheet" href="/css/rent_reserve.css"/>  
+</head>
  
-
 <body>
-    <%-include ('nav.ejs')%>
-    <div class="container" style="padding-top: 90px; padding-bottom: 90px;">
+<%-include ('nav.ejs')%>
+<div class="container" style="padding-top: 90px; padding-bottom: 90px;">
     <!-- 수룡이 사진 div -->
     <div class="wrapper">
-        <!--<img src="./img/sungshin.png" alt="수룡" class="rentFormImg">-->
-        <img src="img/suryong.png" alt="수룡" class="formImg">
+        <img src="/img/suryong.png" alt="수룡" class="formImg">
     </div>
+
     <div class="content1">
         <div class="block1-2" >
             <div class="block1-3"><br>
-                <form action="/views/rent" method = "POST" id="rentForm">
-                    <h3>&nbsp 물품명 : <%=product_name %></h3><br>
-                    <!-- 수량 파트 div -->
-                    <div>
-                        <!-- 수량 개수 체크 -->
-                        <h3>
-                            <label>&nbsp 수량 :
-                                <select  name='value '>
-                                    <option selected>개수를 선택하세요</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                </select>
-                            </label>
-                        </h3>                
-                    </div><br>
-                    <h3>
-                        <label>&nbsp 기간 :
-                            <input name="datepicker" type="date">
-                        </label>
-                    </h3>
+                <form action="/rent" method = "POST" style="text-align: center;">
+                    <input type="hidden" value="<%=product_code%>" name="productCode">
+                    <h5>대여하려는 물품이 맞는지 확인해주세요.</h5><br>
+                    <p><strong>물품명 : <%=product_name %></strong></p>
+                    <p><strong>신청일자: <%= moment(date).format('YYYY-M-D'); %></strong></p>
+
+                    <div class="buttonoutter">
+                        <button onclick="location.href='/rent';" class="homeBtn btn-borrow">대여</button>
+                    </div>
                 </form>
-            </div>
-            </div>
-            <div class="buttonoutter">
-                <!-- <button id="rent" type="submit" form="rentForm">대여</button> -->
-                <button onclick="location.href='/rent_check';" class="homeBtn btn-borrow">대여</button>
             </div>
         </div>
     </div>
-    </div>
-    <%-include ('footer.ejs')%>
+</div>
+<%-include ('footer.ejs')%>
 </body>
 </html>
