@@ -120,36 +120,49 @@ app.post('/rent', function(req, res, next){
     }); // 물품 정보 가져오는 SQL
   }); // transaction 사용하기
 
+  res.send('<script type="text/javascript">alert("대여 신청이 완료되었습니다."); document.location.href="/home";</script>');
   res.redirect('/home');
 }); // 일단 대여가 완료되면 홈으로 이동...
 
-//예약 페이지
+// // 대여 확인 페이지
+// app.get('/rent_check', function(req, res){
+//   res.render("rent_check.ejs");
+// });
 
-// app.get('/reverse', function(req, res){
+// productName(예약 물품 이름), productCode(예약 물품 종류) 가져오기
+app.get('/reverse/:name/:code', function(req, res, next){
+  var productName = req.params.name; // 전달 받은 예약 물품 이름
+  var productCode = req.params.code; // 전달 받은 예약 물품 종류
+  var date_current = Date.now()
 
-//     res.render("reverse.ejs");
-    
-//  });  // 예약버튼 누르면 예약 페이지로 이동
+  db.query('SELECT * FROM reservation where productCode=?', [productCode], function(err, reservation){
+    if(err) next(err);
+    res.render("reverse.ejs", {product_name: productName, product_code: productCode, date: date_current, moment: moment, counts: reservation.length});
+  });
+}); // 예약버튼 누르면 예약 프로세스 동작
 
+app.post('/reverse', function(req, res, next){
+  var productCode = req.body.productCode; // 예약할 물품 종류를 나타내는 코드
+  console.log(productCode);
 
-//  app.get('/rent_check', function(req, res){
- 
-//     res.render("rent_check.ejs");
-    
-//  });  // 대여확인 누르면 대여 체크 페이지로 이동
+  db.query('INSERT INTO reservation VALUE(null, ?, ?)', [user, productCode], function(err){
+    if(err) next(err);
+  });
+
+  res.send('<script type="text/javascript">alert("예약 신청이 완료되었습니다."); document.location.href="/home";</script>');
+  res.redirect('/home');
+});
  
 //  app.get('/reverse_check', function(req, res){
- 
-//     res.render("reverse_check.ejs");
-    
-//  });  // 예약확인 누르면 예약 체크 페이지로 이동
+//    res.render("reverse_check.ejs");
+// });  // 예약확인 누르면 예약 체크 페이지로 이동
  
 // 마이페이지
 app.get('/mypage', function(request, response){
   db.query(`SELECT * FROM rent INNER JOIN productInfo ON rent.productCode = productInfo.productCode WHERE memberID = ?`,[user], function(error, rent){
 		if(error) throw error;
 
-    db.query(`SELECT * FROM reservationtbl WHERE memberID = ?`, [user], function(error2, reservation){
+    db.query(`SELECT * FROM reservation WHERE memberID = ?`, [user], function(error2, reservation){
       if(error2) throw error2;
       response.render('mypage.ejs', {user: user, rent: rent, reservation: reservation, moment: moment});
     });
@@ -157,20 +170,17 @@ app.get('/mypage', function(request, response){
 })
 
 //건의사항
-
 app.get("/suggestion", function (req, res) {
     res.render("suggestion.ejs");
   });
 
 app.post('/suggestion', function(req, res) {
-
   console.log(req.body);
   db.query('INSERT INTO suggestion SET ? ', {content: req.body.text, create_date: new Date(), memberID: user }, function(err, results, fields){ 
     if (err) throw err;
     console.log(results);
     res.redirect('/home')
    });
-
 }); 
 
 // 물품 추가, 일단 DB에 이미지 저장하려고 만들었음.
