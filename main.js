@@ -87,12 +87,12 @@ app.post('/rent', function(req, res, next){
     db.beginTransaction(function(err){
         if (err) next(err);
         db.query(`
-            SELECT productNum, product.productCode, productName, productImg FROM product join productInfo on product.productCode = productInfo.productCode where productStatus=1 and product.productCode=?;`, 
+            SELECT productNum, product.productCode, productName, productImg FROM product JOIN productInfo ON product.productCode = productInfo.productCode WHERE productStatus=1 AND product.productCode=?;`, 
             [productCode], function(err1, product){
             if (err1) next(err); 
             var num = product[0].productNum; // 현재 대여 가능한 물품 번호 가져오기
-            var img = product[0].productImg;
-            var name= product[0].productName;
+            var img = product[0].productImg; // 물품 이미지 경로
+            var name= product[0].productName; // 물품 이름
 
             db.query('UPDATE product SET productStatus=0 where productNum=?', [num], function(err2){ // product 테이블 업데이트 
                 if (err2){
@@ -115,41 +115,52 @@ app.post('/rent', function(req, res, next){
                             });
                         }
                         console.log('success!');
+                        // 일단 대여가 완료되면 rent_check로 이동!
                         res.render('rent_check.ejs', {rent_id: result.insertId, rent_product: name, rent_img: img, rent_date: Date.now(), moment: moment});
                     });
                 }); // rent 테이블에 데이터 추가
             }); // product 테이블 업데이트
         }); // 물품 정보 가져오는 SQL
     }); // transaction 사용하기
-}); // 일단 대여가 완료되면 rent_check로 이동!
+});
 
 // productName(예약 물품 이름), productCode(예약 물품 종류) 가져오기
-app.get('/reverse/:name/:code', function(req, res, next){
+app.get('/reserve/:name/:code', function(req, res, next){
     var productName = req.params.name; // 전달 받은 예약 물품 이름
     var productCode = req.params.code; // 전달 받은 예약 물품 종류
     var date_current = Date.now()
     
     db.query('SELECT * FROM reservation where productCode=?', [productCode], function(err, reservation){
         if(err) next(err);
-        res.render("reverse.ejs", {product_name: productName, product_code: productCode, date: date_current, moment: moment, counts: reservation.length});
+        res.render("reserve.ejs", {product_name: productName, product_code: productCode, date: date_current, moment: moment, counts: reservation.length});
     });
 }); // 예약버튼 누르면 예약 프로세스 동작
 
 // 예약
-app.post('/reverse', function(req, res, next){
+app.post('/reserve', function(req, res, next){
     var productCode = req.body.productCode; // 예약할 물품 종류를 나타내는 코드
-    
-    db.query('INSERT INTO reservation VALUE(null, ?, ?)', [user, productCode], function(err){
+
+    db.query('SELECT * FROM productInfo WHERE productCode=?', [productCode], function(err, product){
+        if(err) next(err);
+        var name = product[0].productName; // 예약한 물품 이름
+        var img = product[0].productImg; // 예약한 물품 이미지
+
+        db.query('INSERT INTO reservation VALUE(null, ?, ?)', [user, productCode], function(err2, result){
+            if(err2) next(err2);
+            res.render("reserve_check.ejs", {reservation_id: result.insertId, reservation_name: name, reservation_img: img});
+        });
+    });
+});
+
+// 예약 취소
+app.post('/reserve_cancel', function(req, res, next){
+    var delete_key = req.body.key;
+    db.query('DELETE FROM reservation WHERE reservationID=?', [delete_key], function(err){
         if(err) next(err);
     });
-    
-    res.send('<script type="text/javascript">alert("예약 신청이 완료되었습니다."); document.location.href="/reverse_check";</script>');
+    res.redirect('/home');
 });
- 
- app.get('/reverse_check', function(req, res){
-   res.render("reverse_check.ejs");
-});  // 예약확인 누르면 예약 체크 페이지로 이동
- 
+
 // 마이페이지
 app.get('/mypage', function(request, response){
     db.query(`SELECT * FROM rent INNER JOIN productInfo ON rent.productCode = productInfo.productCode WHERE memberID = ?`,[user], function(error, rent){

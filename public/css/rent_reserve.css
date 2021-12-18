@@ -95,6 +95,24 @@ button{
     border-radius:10%;
 }
 
+#edit{
+    background-color: #C9C9C9;
+    border:1px solid #C9C9C9;
+    border-radius:10%;
+}
+
+#cancel{
+    background-color: #FFB8EF;
+    border:1px solid #FFB8EF;
+    border-radius:10%;
+}
+
+#confirm{
+    background-color: #93EBFF;
+    border:1px solid #93EBFF;
+    border-radius:10%;
+}
+
 .content1{
     margin-bottom: 30px;
 }
