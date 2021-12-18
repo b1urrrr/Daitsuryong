@@ -32,6 +32,35 @@
     background-color: #FFFFFF;
 }
 
+/*대여 확인 폼 바깥 div*/
+.outer {
+    flex-direction: column;
+    width: 50%;
+    height: 460px;
+    margin-bottom: 30px;
+    justify-content:center;
+    align-items: center;
+    background-color: #CABBE9;
+    display: flex;
+    margin:0 auto;
+    border-radius : 20px;
+}
+
+/*대여 확인 폼 안쪽 div*/
+.inner {
+    width: 95%;
+    height: 380px;
+    border-radius : 20px;
+    background-color: #FFFFFF;
+}
+
+/*물품 이미지*/
+.productimg{
+    width: 220px;
+    height: 200px;
+    margin-bottom: 10px;
+}
+
 /*버튼*/
 .buttonoutter{
     display: flex;
@@ -57,6 +86,12 @@ button{
 #reserve{
     background-color: #FFB8EF;
     border:1px solid #FFB8EF;
+    border-radius:10%;
+}
+
+#rentcheck{
+    background-color: #93EBFF;
+    border:1px solid #93EBFF;
     border-radius:10%;
 }
 
