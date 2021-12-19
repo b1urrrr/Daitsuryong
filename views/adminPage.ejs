@@ -12,14 +12,18 @@
       <hr class="line" />
       <div class="product-manage-container">
         <% for (var i = 0; i < num; i++) {%>
-        <div
-          onclick="location.href='/admin/manage/<%=product[i].productName%>';"
-          class="card"
-          style="width: 18rem"
-        >
-          <img class="img" src="<%=product[i].productImg%>" />
+        <div class="card" style="width: 18rem">
+          <img
+            class="img"
+            src="<%=product[i].productImg%>"
+            onclick="location.href='/admin/manage/<%=product[i].productName%>';"
+          />
           <div class="card-body">
-            <h5 href="/admin/manage" class="card-title">
+            <h5
+              href="/admin/manage"
+              class="card-title"
+              onclick="location.href='/admin/manage/<%=product[i].productName%>';"
+            >
               <%=product[i].productName%>
             </h5>
             <form class="count-container">
