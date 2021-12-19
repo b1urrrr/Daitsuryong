@@ -62,6 +62,40 @@
                             </div>
                         <% } %>
                     </div>
+                    <!-- 예약내역 -->
+                    <div class="history">
+                        <h4>예약내역</h4>
+                        <hr>
+                        <div class="historyList">
+                            <% for (var i = 0; i < reservation.length; i++){ %>
+                                <div class="list">
+                                    <div>
+                                        <img src="<%=reservation[i].productImg%>" alt="물품 이미지" class="listImg">
+                                    </div>
+                                    <div>
+                                        <p class="productName"><%=reservation[i].productName%></p>
+                                        <p class="reserveNumber">예약번호 : <%=reservation[i].reservationID%></p>
+                                        <p class="term">예약한 날짜: <%= moment(reservation[i].reservation_date).format('YYYY-M-D'); %> <br>                                       
+                                    </div>
+                                </div>
+                            <% } %>
+    
+                            <% if ((reservation.length % 2) != 0){ %>
+                                <div class="list2">
+                                    <div>
+                                        <img src="/img/footprint.png" alt="발자국" style="width:100px; float:right;">
+                                    </div>
+                                </div>
+                            <% } %>
+                            
+                            <% if (reservation.length == 0){ %>
+                                <div class="emptyList">
+                                    <div style="text-align: center;">
+                                        <a href="/home"><img src="/img/rentSuryong.png" alt="수룡" width=250></a>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
                 </div>    
             </div>
         </div>
