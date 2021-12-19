@@ -165,12 +165,13 @@ app.get('/mypage', function(request, response){
     db.query(`SELECT * FROM rent INNER JOIN productInfo ON rent.productCode = productInfo.productCode WHERE memberID = ?`,[user], function(error, rent){
 		if(error) throw error;
 
-        db.query(`SELECT * FROM reservation WHERE memberID = ?`, [user], function(error2, reservation){
+        db.query(`SELECT * FROM reservation INNER JOIN productInfo ON reservation.productCode = productInfo.productCode WHERE memberID = ?`, [user], function(error2, reservation){
         if(error2) throw error2;
-        response.render('mypage.ejs', {user: user, rent: rent, reservation: reservation, moment: moment});
+       
+        response.render('mypage.ejs', {user: user, rent: rent, reservation: reservation,moment: moment});
         });
 	});
-})
+});
 
 //건의사항
 app.get("/suggestion", function (req, res) {
