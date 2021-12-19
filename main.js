@@ -5,6 +5,7 @@ var moment = require("moment"); // 날짜 출력 포맷, 설치 필요
 const router = express.Router();
 const bodyParser = require("body-parser");
 var session = require("express-session");
+var cookieParser = require("cookie-parser");
 const { O_NOFOLLOW } = require("constants");
 const multer = require("multer"); // 이미지 업로드를 위한 모듈
 const path = require("path");
@@ -12,6 +13,8 @@ var http = require("http");
 var fs = require("fs");
 var url = require("url");
 var qs = require("querystring");
+var passport = require("passport");
+
 var app = express(); // applicationn 객체 반환
 
 var storage = multer.diskStorage({
@@ -36,8 +39,14 @@ app.get("/", function (req, res) {
 });
 
 var user = ""; // 로그인한 사용자의 아이디를 저장
+app.use(
+  session({
+    secret: "minseon",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
-//로그인
 app.post("/", function (req, res) {
   var userid = req.body.id;
   var password = req.body.pw;
@@ -67,6 +76,36 @@ app.post("/", function (req, res) {
     res.end();
   }
 });
+
+app.get("/logout", function (req, res) {
+  req.session.destroy(function (err) {
+    res.clearCookie("connect.sid");
+    res.redirect("/");
+  });
+});
+
+/*
+  passport.serializeUser(function (userid, done) {
+    done(null, userid);
+  });
+  
+  //이 세션 데이터를 가진 사람을 DB에서 찾아주세요 (마이페이지 접속시 발동)
+  passport.deserializeUser(function (id, done) {
+    db.collection("User").findOne({ userid: id }, function (err, result) {
+      done(null, result);
+    });
+  });
+  
+  // 마이페이지 닉네임 불러와야하는 페이지들
+  
+  function login(req, res, next) {
+    if (req.userid) {
+      next();
+    } else {
+      res.send("로그인 안했음");
+    }
+  }
+*/
 
 // 홈 코드
 app.get("/home", function (request, response) {
@@ -226,10 +265,11 @@ app.get("/mypage", function (request, response) {
       if (error) throw error;
 
       db.query(
-        `SELECT * FROM reservation WHERE memberID = ?`,
+        `SELECT * FROM reservation INNER JOIN productInfo ON reservation.productCode = productInfo.productCode WHERE memberID = ?`,
         [user],
         function (error2, reservation) {
           if (error2) throw error2;
+
           response.render("mypage.ejs", {
             user: user,
             rent: rent,

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
+    <%-include ('baseHead.ejs')%>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,6 +28,7 @@
         justify-content: center;
         align-items: center;
         text-align: center;
+        margin-bottom: 30px;
       }
 
       /*안내 문구*/
@@ -36,15 +38,16 @@
 
       .text {
         position: absolute;
-        top: 4vh;
+        top: 15vh;
         left: 12vh;
         width: 13vh;
-        font-size: 1vw;
+        font-size: 1.3vw;
         font-weight: bold;
       }
 
       /*수룡이 이미지*/
       .suryong {
+        margin-top: 7vw;
         width: 13vw;
         width: 13vw;
       }
@@ -79,6 +82,7 @@
     </style>
   </head>
   <body>
+    <%-include ('nav.ejs')%>
     <div class="suggestion_container">
       <div class="text-container">
         <p class="text">건의사항을<br />자유롭게<br />작성해주세요!</p>
@@ -91,5 +95,6 @@
         </form>
       </div>
     </div>
+    <%-include ('footer.ejs')%>
   </body>
 </html>
