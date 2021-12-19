@@ -45,6 +45,7 @@
   height: 10rem;
   background-color: #fdfdfd;
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .btn-circle {
@@ -67,13 +68,13 @@
   border: 0;
   border-radius: 10px;
   margin: 10px;
-  cursor: pointer;
 }
 
 .card-title {
   text-align: left;
   font-size: 1.2vw;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .count-container {
