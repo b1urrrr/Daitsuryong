@@ -11,39 +11,56 @@
             <div class="mypage">
                 <h1>마이페이지</h1>
             </div>
+            
+
             <div class = "outter">
-                <div class="my">
-                    <div class="myInfo">회원정보</div>
-                    <div class="studentId">학번 : <%=user %></div>
-                    <div class="status">
-                        <div class="reservation">예약중 : <%=reservation.length %></div>
-                        <div class="borrowing"> 대여중 : <%=rent.length %></div>
+                <div class="info">
+                    <div class="infoBox">
+                        <h4>회원정보</h4>
+                        <p style="margin:10px;"><strong>학번 : <%=user %></strong></p>
+                        <div class="status">
+                            <p style="margin:10px;">
+                                대여중 : <%=rent.length %><br>
+                                예약중 : <%=reservation.length %>
+                            </p>
+                        </div>
                     </div>
-                </div>   
+                </div>
 
                 <div class="history">
                     <h4>대여내역</h4>
                     <hr>
-                    <ol class="list-group ">
+                    <div class="historyList">
                         <% for (var i = 0; i < rent.length; i++){ %>
-                            <li class=" d-flex justify-content-between align-items-start list">
-                                <div class="ms-2 me-auto">
-                                    <div class="productName"><%=rent[i].productName%></div>
-                                    <div class="term">대여날짜: <%= moment(rent[i].rent_date).format('YYYY-M-D'); %> </div>
-                                    <div class="productStatus">상태: <%=rent[i].rent_state%></div>
+                            <div class="list">
+                                <div>
+                                    <img src="<%=rent[i].productImg%>" alt="물품 이미지" class="listImg">
                                 </div>
-                            </li>
+                                <div>
+                                    <p class="productName"><%=rent[i].productName%></p>
+                                    <p class="term">대여날짜: <%= moment(rent[i].rent_date).format('YYYY-M-D'); %> <br>
+                                        상태: <%=rent[i].rent_state%>
+                                    </p>
+                                </div>
+                            </div>
+                        <% } %>
+
+                        <% if ((rent.length % 2) != 0){ %>
+                            <div class="list2">
+                                <div>
+                                    <img src="/img/footprint.png" alt="발자국" style="width:100px; float:right;">
+                                </div>
+                            </div>
                         <% } %>
                         
                         <% if (rent.length == 0){ %>
-                            <li class=" d-flex justify-content-between align-items-start list">
-                                <div class="ms-2 me-auto">
-                                    <p>대여한 물품이 없습니다.</p>
+                            <div class="emptyList">
+                                <div style="text-align: center;">
+                                    <a href="/home"><img src="/img/rentSuryong.png" alt="수룡" width=250></a>
                                 </div>
-                            </li>
+                            </div>
                         <% } %>
-            
-                    </ol>
+                    </div>
                 </div>    
             </div>
         </div>
