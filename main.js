@@ -78,7 +78,7 @@ app.get('/home', function(request, response){
      var datepicker = req.body.datepicker;
      var datas = [ value, datepicker];
 
-    db.query(`SELECT * FROM productinfo`, function(error, products){
+    db.query(`SELECT * FROM info`, function(error, products){
         console.log("productName");
 		if (error) throw error; // 오류 처리
         req.on('end', function(){
@@ -105,10 +105,10 @@ app.get('/home', function(request, response){
      var name = path.parse(req.params.productName).base;
      console.log(name);
 
-    db.query(`SELECT * FROM productinfo`, function(error, products){
+    db.query(`SELECT * FROM info`, function(error, products){
 		if (error) throw error; // 오류 처리
 		res.render('rent.ejs', {product: products, product_name: name});
-        res.render(name);
+        // res.render(name);
        
 	});
     // res.render("rent.ejs");
@@ -138,10 +138,6 @@ app.get('/reverse', function(req, res){
     
  });  // 예약확인 누르면 예약 체크 페이지로 이동
  
-
-app.listen(3000, function(request, response){
-	console.log('app listening on port 3000');
-});
 
 // 마이페이지
 app.get('/mypage', async function(request, response){
@@ -197,7 +193,7 @@ app.post("/addProduct", upload.single('img'), function(req, res, next){
 
 // 관리자 페이지
 app.get("/admin", function (req, res) {
-  db.query(`SELECT * FROM productinfo`, function (error, products) {
+  db.query(`SELECT * FROM info`, function (error, products) {
     if (error) throw error; // 오류 처리
     db.query(`SELECT * FROM suggestion`, function (error2, suggestions) {
       if (error2) throw error2;
@@ -213,9 +209,9 @@ app.get("/admin", function (req, res) {
 });
 
 app.get("/admin/manage", function (req, res) {
-  db.query(`SELECT * FROM productinfo`, function (error, products) {
+  db.query(`SELECT * FROM info`, function (error, products) {
     if (error) throw error; // 오류 처리
-    response.render("rentManage.ejs", {
+    res.render("rentManage.ejs", {
       product: products,
       num: products.length,
     });
