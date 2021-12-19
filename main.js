@@ -89,7 +89,7 @@ app.get('/home', function(request, response){
             function(error2, rent){
                 res.render('rent.ejs', {product: products, num: products.length});
         })
-      
+        console.log(datas)
         })
 	    // res.render('rent.ejs', {product: products, num: products.length});
     
