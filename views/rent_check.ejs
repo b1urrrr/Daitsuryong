@@ -1,18 +1,31 @@
 <!DOCTYPE html>
 <html>
-    <head>
-       <%-include ('baseHead.ejs')%>       
-    </head>
+<head>
+    <%-include ('baseHead.ejs')%>
+    <link rel="stylesheet" href="/css/rent_reserve.css"/> 
+</head>
 
-    <body>
-      <%-include ('nav.ejs')%>
-    <div class="container" style="padding-top: 90px; padding-bottom: 90px;">
-      <div >
-        <%-include ('rent_check.html')%>   
-      </div>
-
-
+<body>
+<%-include ('nav.ejs')%>
+<div class="container" style="padding-top: 90px; padding-bottom: 90px;">
+    <!-- 수룡이 사진 div -->
+    <div class="wrapper">
+        <img src="/img/suryong.png" alt="수룡" class="formImg">
     </div>
-    <%-include ('footer.ejs')%>
+
+    <div class="content1">
+        <div class="outer" >
+            <div class="inner" style="text-align: center;">
+                <br>
+                <p><strong>대여번호 : <%=rent_id%></strong></p>
+                <p><strong>대여물품 : <%=rent_product%></strong></p>
+                <img class="productimg" src="<%=rent_img%>">
+                <p><strong>기간 : <%= moment(rent_date).format('YYYY-M-D');%> ~ <%= moment(rent_date).add(7, 'days').format('YYYY-M-D');%></strong></p>
+            </div>
+            <button onclick="location.href='/home';" id="rentcheck">확인</button>
+        </div>        
+    </div>
+</div>
+<%-include ('footer.ejs')%>
 </body>
 </html>
