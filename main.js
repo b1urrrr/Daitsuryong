@@ -123,27 +123,11 @@ app.post('/rent', function(req, res, next){
     }); // transaction 사용하기
 });
 
-// <<<<<<< HEAD
-//     db.query(`SELECT * FROM info`, function(error, products){
-//         console.log("productName");
-// 		if (error) throw error; // 오류 처리
-//         req.on('end', function(){
-//             var post = qs.parse(body);
-//             db.query(`INSERT INTO rent (rentID, rent_date, rent_state, memberID, productNum) VALUES ("?",NOW(),"신청완료","20190958","101")`, 
-//             [post.datepicker],
-//             function(error2, rent){
-//                 res.render('rent.ejs', {product: products, num: products.length});
-//         })
-      
-//         })
-// 	    // res.render('rent.ejs', {product: products, num: products.length});
-// =======
 // productName(예약 물품 이름), productCode(예약 물품 종류) 가져오기
 app.get('/reserve/:name/:code', function(req, res, next){
     var productName = req.params.name; // 전달 받은 예약 물품 이름
     var productCode = req.params.code; // 전달 받은 예약 물품 종류
     var date_current = Date.now()
-
     
     db.query('SELECT * FROM reservation where productCode=?', [productCode], function(err, reservation){
         if(err) next(err);
@@ -151,37 +135,9 @@ app.get('/reserve/:name/:code', function(req, res, next){
     });
 }); // 예약버튼 누르면 예약 프로세스 동작
 
-
- // productName 이름 가져오기
-
- app.get('/rent/:productName', function(req, res){
-     var name = path.parse(req.params.productName).base;
-     console.log(name);
-
-    db.query(`SELECT * FROM info`, function(error, products){
-		if (error) throw error; // 오류 처리
-		res.render('rent.ejs', {product: products, product_name: name});
-        // res.render(name);
-       
-	});
-    // res.render("rent.ejs");
-    
- });  // 대여버튼 누르면 대여 페이지로 이동
-
-
-
-//예약 페이지
-
-app.get('/reverse', function(req, res){
-
-    res.render("reverse.ejs");
-    
- });  // 예약버튼 누르면 예약 페이지로 이동
-
 // 예약
 app.post('/reserve', function(req, res, next){
     var productCode = req.body.productCode; // 예약할 물품 종류를 나타내는 코드
-
 
     db.query('SELECT * FROM productInfo WHERE productCode=?', [productCode], function(err, product){
         if(err) next(err);
@@ -195,7 +151,6 @@ app.post('/reserve', function(req, res, next){
     });
 });
 
-
 // 예약 취소
 app.post('/reserve_cancel', function(req, res, next){
     var delete_key = req.body.key;
@@ -204,7 +159,6 @@ app.post('/reserve_cancel', function(req, res, next){
     });
     res.redirect('/home');
 });
-
 
 // 마이페이지
 app.get('/mypage', function(request, response){
@@ -253,28 +207,28 @@ app.post("/addProduct", upload.single('img'), function(req, res, next){
 
 // 관리자 페이지
 app.get("/admin", function (req, res) {
-
-  db.query(`SELECT * FROM info`, function (error, products) {
-    if (error) throw error; // 오류 처리
-    db.query(`SELECT * FROM suggestion`, function (error2, suggestions) {
-      if (error2) throw error2;
-      res.render("adminPage.ejs", {
-        product: products,
-        num: products.length,
-        suggestion: suggestions,
-        count: suggestions.length,
-        moment: moment,
-      });
+     db.query(`SELECT * FROM info`, function (error, products) {
+        if (error) throw error; // 오류 처리
+        db.query(`SELECT * FROM suggestion`, function (error2, suggestions) {
+            if (error2) throw error2;
+            res.render("adminPage.ejs", {
+                product: products,
+                num: products.length,
+                suggestion: suggestions,
+                count: suggestions.length,
+                moment: moment,
+            });
+        });
     });
 });
 
 app.get("/admin/manage", function (req, res) {
-<<<<<<< HEAD
-  db.query(`SELECT * FROM info`, function (error, products) {
-    if (error) throw error; // 오류 처리
-    res.render("rentManage.ejs", {
-      product: products,
-      num: products.length,
+    db.query(`SELECT * FROM info`, function (error, products) {
+        if (error) throw error; // 오류 처리
+        res.render("rentManage.ejs", {
+            product: products,
+            num: products.length,
+        });
     });
 });
 
