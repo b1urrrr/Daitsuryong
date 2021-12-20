@@ -497,6 +497,51 @@ app.post("/admin", function (req, res) {
   }
 });
 
+// 관리자페이지 물품 증가
+app.post("/adminIncrease", function (req, res) {
+  console.log(req.body);
+  console.log(req.body.product[0]);
+  var productCode = req.body.product[0];
+
+  db.query(
+    "INSERT INTO product VALUES (null, ?, 1)",
+    [productCode],
+    function (err, result) {
+      if (err) {
+        throw err;
+      }
+      res.redirect("/admin");
+    }
+  );
+});
+
+// 관리자페이지 물품 감소
+app.post("/adminDecrease", function (req, res) {
+  console.log(req.body);
+  console.log(req.body.product[0]);
+  var productCode = req.body.product[0];
+
+  db.query(
+    "SELECT productNum FROM product WHERE productStatus=1 && productCode=?",
+    [productCode],
+    function (err, productNum) {
+      if (err) {
+        throw err;
+      }
+      db.query(
+        "DELETE FROM product WHERE productNum=?",
+        [productNum[0].productNum],
+        function (err, result) {
+          if (err) {
+            throw err;
+          }
+          res.redirect("/admin");
+        }
+      );
+    }
+  );
+});
+
 // 관리자페이지 물품 관리 - productName(대여 물품 이름)
 app.get("/admin/manage/:name", function (req, res) {
   if (req.session.user_name === undefined){

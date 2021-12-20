@@ -31,8 +31,14 @@
               <p><%=product[i].counts%></p>
             </form>
             <div class="btn-container">
-              <a href="#" class="btn btn-circle">+</a>
-              <a href="#" class="btn btn-circle">-</a>
+              <form action="/adminIncrease" method="POST" class="btn btn-circle">
+                <input type="hidden" name="product" value="<%=product[i].productCode%>">
+                <input type="submit" value="+">
+              </form>
+              <form action="/adminDecrease" method="POST" class="btn btn-circle">
+                <input type="hidden" name="product" value="<%=product[i].productCode%>">
+                <input type="submit" value="-">
+              </form>
             </div>
             <form action="/admin" method="POST" >
               <input type="hidden" name="productCode" value="<%=product[i].productCode%>">
