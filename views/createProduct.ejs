@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <%-include ('baseHead.ejs')%>
-        <link rel="stylesheet" href="/css/mypage.css">
-    </head>
+  <head>
+    <%-include ('baseHead.ejs')%>
+    <link rel="stylesheet" href="/css/mypage.css" />
+  </head>
 
-    <body>
-        <%-include ('nav.ejs')%>
-        <div class="container" style="padding-top: 90px; padding-bottom: 90px;">
-            <h1>물품 추가를 위한 폼</h1>
-            <form action="/addProduct" method="POST" enctype="multipart/form-data">
-                <p><input type="number" name="productNum" placeholder="물품 번호"></p>
-                <p><input type="text" name="productName" placeholder="물품명"></p>
-                <p><input type="file" name="img"></p>
-                <p><input type="submit" value="추가"></p>
-            </form>
-        </div>
-        <%-include ('footer.ejs')%>       
-    </body>
+  <body>
+    <%-include ('nav.ejs')%>
+    <div class="container" style="padding-top: 90px; padding-bottom: 90px">
+      <h1>물품 추가를 위한 폼</h1>
+      <form action="/addProduct" method="POST" enctype="multipart/form-data">
+        <p><input type="text" name="productName" placeholder="물품명" /></p>
+        <p><input type="file" name="img" /></p>
+        <p><input type="submit" value="추가" /></p>
+      </form>
+    </div>
+    <%-include ('footer.ejs')%>
+  </body>
 </html>

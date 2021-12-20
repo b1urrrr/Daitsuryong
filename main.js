@@ -288,13 +288,11 @@ app.get("/suggestion", function (req, res) {
 });
 
 app.post("/suggestion", function (req, res) {
-  console.log(req.body);
   db.query(
     "INSERT INTO suggestion values (null, ?, date_format(NOW(), '%Y-%m-%d'), ?)",
     [req.body.text, user],
     function (err, results, fields) {
       if (err) throw err;
-      console.log(results);
       res.redirect("/home");
     }
   );
@@ -306,18 +304,34 @@ app.get("/addProduct", function (req, res) {
 });
 
 app.post("/addProduct", upload.single("img"), function (req, res, next) {
-  let productNum = req.body.productNum;
   let productName = req.body.productName;
-  let productStatus = 1; // 처음에는 무조건 물품 상태를 1로 설정...
   let img = `/img/${req.file.filename}`; // 이미지 경로
 
   db.query(
-    "INSERT INTO product VALUES (?, ?, ?, ?)",
-    [productNum, productName, productStatus, img],
+    "INSERT INTO productInfo VALUES (null, ?, ?)",
+    [productName, img],
     function (err, result) {
       if (err) {
         throw err;
       }
+      db.query(
+        "SELECT productCode FROM productInfo WHERE productName=?",
+        [productName],
+        function (err2, productCode) {
+          if (err2) {
+            throw err2;
+          }
+          db.query(
+            "INSERT INTO product VALUES (null, ?, 1)",
+            [productCode[0].productCode],
+            function (err3, productResult) {
+              if (err3) {
+                throw err3;
+              }
+            }
+          );
+        }
+      );
       res.redirect("/home");
     }
   );
@@ -344,7 +358,46 @@ app.get("/admin", function (req, res) {
   });
 });
 
-// 이미지, 물품명, 수량, 예약내역, 대여내역
+// 관리자페이지 물품 삭제
+app.post("/admin", function (req, res) {
+  console.log(req.body);
+  let productCode = req.body.productCode;
+
+  db.query(
+    "SELECT productImg FROM productInfo WHERE productCode=?",
+    [productCode],
+    function (err, productImg) {
+      let path = "public" + productImg[0].productImg;
+
+      fs.unlink(path, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      });
+      db.query(
+        "DELETE FROM product WHERE productCode=?",
+        [productCode],
+        function (err, result) {
+          if (err) {
+            throw err;
+          }
+          db.query(
+            "DELETE FROM productInfo WHERE productCode=?",
+            [productCode],
+            function (err2, result2) {
+              if (err2) {
+                throw err2;
+              }
+            }
+          );
+        }
+      );
+    }
+  );
+  res.redirect("/home");
+});
+
 // 관리자페이지 물품 관리 - productName(대여 물품 이름)
 app.get("/admin/manage/:name", function (req, res) {
   var productName = req.params.name; // 전달 받은 대여 물품 이름
