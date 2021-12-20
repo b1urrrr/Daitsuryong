@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <%-include ('baseHead.ejs')%>
+    <link rel="stylesheet" href="/css/rentManage.css" />
+  </head>
+  <body>
+    <%-include ('nav.ejs')%>
+    <div class="rent-manage-container">
+      <img class="suryong" src="/img/suryong.png" />
+      <div class="card-container">
+        <div class="rent-information-container">
+          <div class="product-container">
+            <img class="product-img" src="<%=product.productImg%>" />
+            <h5 class="product-name"><%=product.productName%></h5>
+            <h5 class="product-count">현재 수량 : <%=product.counts%></h5>
+          </div>
+          <div class="rent-container">
+            <div class="select-container">
+              <h5 class="select-title">
+                &nbsp;&nbsp;예약 : <%=reservationCount%>명
+              </h5>
+              <% if (reservationCount != 0) {%>
+              <select class="select">
+                <% for (var i = 0; i < reservationCount; i++) {%>
+                <option>
+                  &nbsp;&nbsp;&nbsp;<%=reservation[i].memberID%>&nbsp;&nbsp;&nbsp;
+                </option>
+                <% }%>
+              </select>
+              <% }%>
+            </div>
+            <button class="sub-btn">대여 신청</button>
+            <button class="sub-btn">삭제</button>
+            <div class="select-container">
+              <h5 class="select-title">&nbsp;&nbsp;대여 : <%=rentCount%>명</h5>
+              <% if (rentCount != 0) {%>
+              <select class="select">
+                <% for (var i = 0; i < rentCount; i++) {%>
+                <option>
+                  &nbsp;&nbsp;&nbsp;<%=rent[i].memberID%>&nbsp;&nbsp;&nbsp;
+                </option>
+                <% }%>
+              </select>
+              <% }%>
+            </div>
+            <button class="sub-btn">대여</button>
+            <button class="sub-btn">반납</button>
+          </div>
+        </div>
+        <button class="confirm-btn" onclick="location.href='/admin';">
+          돌아가기
+        </button>
+      </div>
+    </div>
+    <%-include ('footer.ejs')%>
+  </body>
+</html>
