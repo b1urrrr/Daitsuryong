@@ -71,7 +71,7 @@
         <% for (var i = 0; i < count; i++) {%>
         <div class="suggestion-card">
           <p>
-            <%=moment(suggestion[i].create_date).format('YYYY.MM.DD. hh:mm');%>
+            <%=moment(suggestion[i].create_date).format('YYYY.MM.DD.');%>
           </p>
           <p><%=suggestion[i].user_id%> : <%=suggestion[i].content%></p>
         </div>
