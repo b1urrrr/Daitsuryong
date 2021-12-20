@@ -60,6 +60,12 @@
   font-weight: bold;
 }
 
+input {
+  border: none;
+  background: none;
+  color: #8e81a7;
+}
+
 .card {
   height: 350px;
   padding: 20px;
