@@ -31,7 +31,9 @@
               <% }%>
             </div>
             <button class="sub-btn">대여 신청</button>
-            <button onclick="location.href='/reserve_cancel_specific'"class="sub-btn">예약 취소</button>
+            <form action="/reserve_cancel_specific" method="POST">
+              <button class="sub-btn">예약 취소</button>
+            </form>
             
             <div class="select-container">
               <h5 class="select-title">&nbsp;&nbsp;대여 : <%=rentCount%>명</h5>
