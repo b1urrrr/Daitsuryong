@@ -38,7 +38,11 @@ app.get("/", function (req, res) {
   res.render("login.ejs");
 });
 
-var user = ""; // 로그인한 사용자의 아이디를 저장
+// app.get(function(req, res){
+//   const sess = req.session;
+//   res.render('nav.ejs', {user: sess.user_uid});
+// })
+
 app.use(
   session({
     secret: "minseon",
@@ -46,6 +50,12 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+// 로그인 한 사용자 이름 가져오기
+app.use(function(req, res, next){
+  res.locals.name = req.session.user_name;
+  next();
+});
 
 app.post("/", function (req, res) {
   var userid = req.body.id;
@@ -59,9 +69,10 @@ app.post("/", function (req, res) {
       function (error, results, fields) {
         if (error) throw error;
         if (results.length > 0) {
+          req.session.user_name = results[0].name; // 이름
+          req.session.user_uid = results[0].memberID; // 학번
           res.redirect("/home");
-          user = userid; // 로그인에 성공한 user id 담기
-          res.end();
+          // res.end();
         } else {
           res.send(
             '<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); document.location.href="/";</script>'
@@ -159,7 +170,7 @@ app.post("/rent", function (req, res, next) {
 
             db.query(
               'INSERT INTO rent VALUE(null, now(), "신청완료", ?, ?, ?)',
-              [user, productCode, num],
+              [req.session.user_uid, productCode, num],
               function (err3, result) {
                 // rent 테이블에 삽입
                 if (err3) {
@@ -229,7 +240,7 @@ app.post("/reserve", function (req, res, next) {
 
       db.query(
         "INSERT INTO reservation VALUE(null, ?, ?)",
-        [user, productCode],
+        [req.session.user_uid, productCode],
         function (err2, result) {
           if (err2) next(err2);
           res.render("reserve_check.ejs", {
@@ -257,21 +268,21 @@ app.post("/reserve_cancel", function (req, res, next) {
 });
 
 // 마이페이지
-app.get("/mypage", function (request, response) {
+app.get("/mypage", function (req, response) {
   db.query(
     `SELECT * FROM rent INNER JOIN productInfo ON rent.productCode = productInfo.productCode WHERE memberID = ?`,
-    [user],
+    [req.session.user_uid],
     function (error, rent) {
       if (error) throw error;
 
       db.query(
         `SELECT * FROM reservation INNER JOIN productInfo ON reservation.productCode = productInfo.productCode WHERE memberID = ?`,
-        [user],
+        [req.session.user_uid],
         function (error2, reservation) {
           if (error2) throw error2;
 
           response.render("mypage.ejs", {
-            user: user,
+            user: req.session.user_uid,
             rent: rent,
             reservation: reservation,
             moment: moment,
