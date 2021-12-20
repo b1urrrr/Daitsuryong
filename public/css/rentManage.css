@@ -39,7 +39,7 @@
 
 .product-img {
   width: 12rem;
-  height: 8rem;
+  height: 11rem;
   background-color: #fdfdfd;
   border-radius: 10px;
 }
@@ -85,6 +85,10 @@
   align-items: center;
   padding: 5px;
   height: 35px;
+}
+
+.option {
+  width: 1.1vw;
 }
 
 .sub-btn {

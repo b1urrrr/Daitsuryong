@@ -13,9 +13,17 @@
       <div class="product-manage-container">
         <% for (var i = 0; i < num; i++) {%>
         <div class="card" style="width: 18rem">
-          <div class="img"></div>
+          <img
+            class="img"
+            src="<%=product[i].productImg%>"
+            onclick="location.href='/admin/manage/<%=product[i].productName%>';"
+          />
           <div class="card-body">
-            <h5 href="/admin/manage" class="card-title">
+            <h5
+              href="/admin/manage"
+              class="card-title"
+              onclick="location.href='/admin/manage/<%=product[i].productName%>';"
+            >
               <%=product[i].productName%>
             </h5>
             <form class="count-container">
@@ -31,7 +39,11 @@
         </div>
         <% } %>
 
-        <button class="product-add-btn" style="width: 18rem">
+        <button
+          onclick="location.href='/addProduct';"
+          class="product-add-btn"
+          style="width: 18rem"
+        >
           <p class="plus-text">+</p>
         </button>
       </div>
@@ -40,19 +52,13 @@
       <hr class="line" />
       <div class="statistics-container">
         <div class="statistics-card">
-          <p>2021년 (100회)</p>
-          <p>- 우산 : 20회</p>
-          <p>- 노트북 충전기 : 10회</p>
-          <p>- 휴대폰 충전기 : 10회</p>
-          <p>- 기타 : 00회</p>
-        </div>
-
-        <div class="statistics-card">
-          <p>2022년 (200회)</p>
-          <p>- 우산 : 40회</p>
-          <p>- 노트북 충전기 : 20회</p>
-          <p>- 휴대폰 충전기 : 20회</p>
-          <p>- 기타 : 00회</p>
+          <p>2021년</p>
+          <% for (var i = 0; i < statisticsCount; i++) {%> <% if
+          (statistics[i].rentYear == "2021") {%>
+          <p>
+            - <%=statistics[i].productName%> : <%=statistics[i].rentCount%>회
+          </p>
+          <% }%> <%}%>
         </div>
       </div>
 

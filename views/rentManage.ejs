@@ -21,7 +21,7 @@
                 &nbsp;&nbsp;예약 : <%=reservationCount%>명
               </h5>
               <% if (reservationCount != 0) {%>
-              <select class="select">
+              <select id="selected" class="select">
                 <% for (var i = 0; i < reservationCount; i++) {%>
                 <option>
                   &nbsp;&nbsp;&nbsp;<%=reservation[i].memberID%>&nbsp;&nbsp;&nbsp;
@@ -31,7 +31,8 @@
               <% }%>
             </div>
             <button class="sub-btn">대여 신청</button>
-            <button class="sub-btn">삭제</button>
+            <button onclick="location.href='/reserve_cancel_specific'"class="sub-btn">예약 취소</button>
+            
             <div class="select-container">
               <h5 class="select-title">&nbsp;&nbsp;대여 : <%=rentCount%>명</h5>
               <% if (rentCount != 0) {%>
