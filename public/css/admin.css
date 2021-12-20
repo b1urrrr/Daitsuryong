@@ -78,11 +78,14 @@
 }
 
 .count-container {
+  cursor: default;
   display: flex;
   flex-direction: row;
 }
 
 .delete-btn {
+  border: none;
+  background: none;
   position: absolute;
   right: 30px;
   top: 194px;
