@@ -1,0 +1,58 @@
+/*건의사항 작성 페이지 div*/
+.suggestion_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/*안내 문구*/
+.text-container {
+  position: relative;
+}
+
+.text {
+  position: absolute;
+  top: 15vh;
+  left: 12vh;
+  width: 14vh;
+  font-size: 1vw;
+  font-weight: bold;
+}
+
+/*수룡이 이미지*/
+.suryong {
+  margin-top: 7vw;
+  width: 13vw;
+  width: 13vw;
+}
+
+/*건의사항 작성 폼*/
+.suggestion-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #cabbe9;
+  width: 43vw;
+  height: 56vh;
+  border-radius: 10px;
+}
+
+.textarea {
+  margin-top: 40px;
+  width: 39vw;
+  height: 42vh;
+  border: 0;
+  border-radius: 10px;
+}
+
+.btn {
+  margin: 8px;
+  background-color: #ffcef3;
+  width: 100px;
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+}

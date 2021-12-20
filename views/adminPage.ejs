@@ -34,7 +34,10 @@
               <a href="#" class="btn btn-circle">+</a>
               <a href="#" class="btn btn-circle">-</a>
             </div>
-            <a href="#" class="delete-btn">삭제하기</a>
+            <form action="/admin" method="POST" >
+              <input type="hidden" name="productCode" value="<%=product[i].productCode%>">
+              <input type="submit" class="delete-btn" value="삭제하기"></a>
+            </form>
           </div>
         </div>
         <% } %>
@@ -68,7 +71,7 @@
         <% for (var i = 0; i < count; i++) {%>
         <div class="suggestion-card">
           <p>
-            <%=moment(suggestion[i].create_date).format('YYYY.MM.DD. hh:mm');%>
+            <%=moment(suggestion[i].create_date).format('YYYY.MM.DD.');%>
           </p>
           <p><%=suggestion[i].user_id%> : <%=suggestion[i].content%></p>
         </div>
