@@ -290,8 +290,8 @@ app.get("/suggestion", function (req, res) {
 app.post("/suggestion", function (req, res) {
   console.log(req.body);
   db.query(
-    "INSERT INTO suggestion SET ? ",
-    { content: req.body.text, create_date: new Date(), memberID: user },
+    "INSERT INTO suggestion values (null, ?, date_format(NOW(), '%Y-%m-%d'), ?)",
+    [req.body.text, user],
     function (err, results, fields) {
       if (err) throw err;
       console.log(results);
