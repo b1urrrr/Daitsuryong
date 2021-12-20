@@ -33,16 +33,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public")); // public 폴더에 있는 static file 사용을 위해 추가
 app.set("view engine", "ejs");
 
-// 루트 경로로 접속 시 로그인 페이지로 이동
-app.get("/", function (req, res) {
-  res.render("login.ejs");
-});
-
-// app.get(function(req, res){
-//   const sess = req.session;
-//   res.render('nav.ejs', {user: sess.user_uid});
-// })
-
 app.use(
   session({
     secret: "minseon",
@@ -57,7 +47,13 @@ app.use(function(req, res, next){
   next();
 });
 
+// 루트 경로로 접속 시 로그인 페이지로 이동
+app.get("/", function (req, res) {
+  res.render("login.ejs");    
+});
+
 app.post("/", function (req, res) {
+  console.log(req.session.user_name);
   var userid = req.body.id;
   var password = req.body.pw;
   // console.log(req.body.id);
@@ -119,31 +115,44 @@ app.get("/logout", function (req, res) {
 */
 
 // 홈 코드
-app.get("/home", function (request, response) {
+app.get("/home", function (request, res) {
+  console.log(request.session.user_name);
   db.query(`SELECT * FROM info`, function (error, products) {
     if (error) throw error; // 오류 처리
-    response.render("home.ejs", { product: products, num: products.length });
+    res.render("home.ejs", { product: products, num: products.length });
   });
 });
 
 // productName(대여 물품 이름), productCode(대여 물품 종류) 가져오기
 app.get("/rent/:name/:code", function (req, res) {
-  console.log(req.params);
-  var productName = req.params.name; // 전달 받은 대여 물품 이름
-  var productCode = req.params.code; // 전달 받은 대여 물품 종류
-  var date_current = Date.now();
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  else{
+    var productName = req.params.name; // 전달 받은 대여 물품 이름
+    var productCode = req.params.code; // 전달 받은 대여 물품 종류
+    var date_current = Date.now();
 
-  res.render("rent.ejs", {
-    product_name: productName,
-    product_code: productCode,
-    date: date_current,
-    moment: moment,
-  });
+    res.render("rent.ejs", {
+      product_name: productName,
+      product_code: productCode,
+      date: date_current,
+      moment: moment,
+    });
+  }
 }); // 대여버튼 누르면 대여 프로세스 작동
 
 //대여
 app.post("/rent", function (req, res, next) {
-  var productCode = req.body.productCode; // 대여할 물품 종류를 나타내는 코드
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  else{
+    var productCode = req.body.productCode; // 대여할 물품 종류를 나타내는 코드
 
   db.beginTransaction(function (err) {
     if (err) next(err);
@@ -202,95 +211,124 @@ app.post("/rent", function (req, res, next) {
       }
     ); // 물품 정보 가져오는 SQL
   }); // transaction 사용하기
+  }
 });
 
 // productName(예약 물품 이름), productCode(예약 물품 종류) 가져오기
 app.get("/reserve/:name/:code", function (req, res, next) {
-  var productName = req.params.name; // 전달 받은 예약 물품 이름
-  var productCode = req.params.code; // 전달 받은 예약 물품 종류
-  var date_current = Date.now();
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  else{
+    var productName = req.params.name; // 전달 받은 예약 물품 이름
+    var productCode = req.params.code; // 전달 받은 예약 물품 종류
+    var date_current = Date.now();
 
-  db.query(
-    "SELECT * FROM reservation where productCode=?",
-    [productCode],
-    function (err, reservation) {
-      if (err) next(err);
-      res.render("reserve.ejs", {
-        product_name: productName,
-        product_code: productCode,
-        date: date_current,
-        moment: moment,
-        counts: reservation.length,
-      });
-    }
-  );
+    db.query(
+      "SELECT * FROM reservation where productCode=?",
+      [productCode],
+      function (err, reservation) {
+        if (err) next(err);
+        res.render("reserve.ejs", {
+          product_name: productName,
+          product_code: productCode,
+          date: date_current,
+          moment: moment,
+          counts: reservation.length,
+        });
+      }
+    );
+  }
 }); // 예약버튼 누르면 예약 프로세스 동작
 
 // 예약
 app.post("/reserve", function (req, res, next) {
-  var productCode = req.body.productCode; // 예약할 물품 종류를 나타내는 코드
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  else{
+    var productCode = req.body.productCode; // 예약할 물품 종류를 나타내는 코드
 
-  db.query(
-    "SELECT * FROM productInfo WHERE productCode=?",
-    [productCode],
-    function (err, product) {
-      if (err) next(err);
-      var name = product[0].productName; // 예약한 물품 이름
-      var img = product[0].productImg; // 예약한 물품 이미지
+    db.query(
+      "SELECT * FROM productInfo WHERE productCode=?",
+      [productCode],
+      function (err, product) {
+        if (err) next(err);
+        var name = product[0].productName; // 예약한 물품 이름
+        var img = product[0].productImg; // 예약한 물품 이미지
 
-      db.query(
-        "INSERT INTO reservation VALUE(null, ?, ?)",
-        [req.session.user_uid, productCode],
-        function (err2, result) {
-          if (err2) next(err2);
-          res.render("reserve_check.ejs", {
-            reservation_id: result.insertId,
-            reservation_name: name,
-            reservation_img: img,
-          });
-        }
-      );
-    }
-  );
+        db.query(
+          "INSERT INTO reservation VALUE(null, ?, ?)",
+          [req.session.user_uid, productCode],
+          function (err2, result) {
+            if (err2) next(err2);
+            res.render("reserve_check.ejs", {
+              reservation_id: result.insertId,
+              reservation_name: name,
+              reservation_img: img,
+            });
+          }
+        );
+      }
+    );
+  }
 });
 
 // 예약 취소
 app.post("/reserve_cancel", function (req, res, next) {
-  var delete_key = req.body.key;
-  db.query(
-    "DELETE FROM reservation WHERE reservationID=?",
-    [delete_key],
-    function (err) {
-      if (err) next(err);
-    }
-  );
-  res.redirect("/home");
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  else{
+    var delete_key = req.body.key;
+    db.query(
+      "DELETE FROM reservation WHERE reservationID=?",
+      [delete_key],
+      function (err) {
+        if (err) next(err);
+      }
+    );
+    res.redirect("/home");
+  }
 });
 
 // 마이페이지
-app.get("/mypage", function (req, response) {
-  db.query(
-    `SELECT * FROM rent INNER JOIN productInfo ON rent.productCode = productInfo.productCode WHERE memberID = ?`,
-    [req.session.user_uid],
-    function (error, rent) {
-      if (error) throw error;
-
-      db.query(
-        `SELECT * FROM reservation INNER JOIN productInfo ON reservation.productCode = productInfo.productCode WHERE memberID = ?`,
-        [req.session.user_uid],
-        function (error2, reservation) {
-          if (error2) throw error2;
-
-          response.render("mypage.ejs", {
-            user: req.session.user_uid,
-            rent: rent,
-            reservation: reservation,
-            moment: moment,
-          });
-        }
-      );
-    }
-  );
+app.get("/mypage", function (req, res) {
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  else{
+    db.query(
+      `SELECT * FROM rent INNER JOIN productInfo ON rent.productCode = productInfo.productCode WHERE memberID = ?`,
+      [req.session.user_uid],
+      function (error, rent) {
+        if (error) throw error;
+  
+        db.query(
+          `SELECT * FROM reservation INNER JOIN productInfo ON reservation.productCode = productInfo.productCode WHERE memberID = ?`,
+          [req.session.user_uid],
+          function (error2, reservation) {
+            if (error2) throw error2;
+  
+            res.render("mypage.ejs", {
+              user: req.session.user_uid,
+              rent: rent,
+              reservation: reservation,
+              moment: moment,
+            });
+          }
+        );
+      }
+    );
+  }
 });
 
 //건의사항
@@ -299,23 +337,47 @@ app.get("/suggestion", function (req, res) {
 });
 
 app.post("/suggestion", function (req, res) {
-  db.query(
-    "INSERT INTO suggestion values (null, ?, date_format(NOW(), '%Y-%m-%d'), ?)",
-    [req.body.text, user],
-    function (err, results, fields) {
-      if (err) throw err;
-      res.redirect("/home");
-    }
-  );
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  else{
+    db.query(
+      "INSERT INTO suggestion values (null, ?, date_format(NOW(), '%Y-%m-%d'), ?)",
+      [req.body.text, user],
+      function (err, results, fields) {
+        if (err) throw err;
+        res.redirect("/home");
+      }
+    );
+  }
 });
 
 // 물품 추가, 일단 DB에 이미지 저장하려고 만들었음.
 app.get("/addProduct", function (req, res) {
-  res.render("createProduct.ejs");
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  if (req.session.user_name === 'admin'){
+    res.render("createProduct.ejs");
+  }else{
+    res.send(
+      '<script type="text/javascript">alert("관리자만 이용가능합니다.."); document.location.href="/home";</script>'
+    );
+  }
 });
 
 app.post("/addProduct", upload.single("img"), function (req, res, next) {
-  let productName = req.body.productName;
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  if (req.session.user_name === 'admin'){
+    let productName = req.body.productName;
   let img = `/img/${req.file.filename}`; // 이미지 경로
 
   db.query(
@@ -346,99 +408,136 @@ app.post("/addProduct", upload.single("img"), function (req, res, next) {
       res.redirect("/home");
     }
   );
+  }else{
+    res.send(
+      '<script type="text/javascript">alert("관리자만 이용가능합니다.."); document.location.href="/home";</script>'
+    );
+  }
 });
 
 // 관리자 페이지
 app.get("/admin", function (req, res) {
-  db.query(`SELECT * FROM info`, function (error, products) {
-    if (error) throw error; // 오류 처리
-    db.query(`SELECT * FROM suggestion`, function (error2, suggestions) {
-      if (error2) throw error2;
-      db.query(`SELECT * FROM statistics`, function (error3, statistics) {
-        res.render("adminPage.ejs", {
-          product: products,
-          num: products.length,
-          suggestion: suggestions,
-          count: suggestions.length,
-          moment: moment,
-          statistics: statistics,
-          statisticsCount: statistics.length,
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  if (req.session.user_name === 'admin'){
+    db.query(`SELECT * FROM info`, function (error, products) {
+      if (error) throw error; // 오류 처리
+      db.query(`SELECT * FROM suggestion`, function (error2, suggestions) {
+        if (error2) throw error2;
+        db.query(`SELECT * FROM statistics`, function (error3, statistics) {
+          res.render("adminPage.ejs", {
+            product: products,
+            num: products.length,
+            suggestion: suggestions,
+            count: suggestions.length,
+            moment: moment,
+            statistics: statistics,
+            statisticsCount: statistics.length,
+          });
         });
       });
     });
-  });
+  }else{
+    res.send(
+      '<script type="text/javascript">alert("관리자만 이용가능합니다.."); document.location.href="/home";</script>'
+    );
+  }
 });
 
 // 관리자페이지 물품 삭제
 app.post("/admin", function (req, res) {
-  console.log(req.body);
-  let productCode = req.body.productCode;
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  if (req.session.user_name === 'admin'){
+    let productCode = req.body.productCode;
 
-  db.query(
-    "SELECT productImg FROM productInfo WHERE productCode=?",
-    [productCode],
-    function (err, productImg) {
-      let path = "public" + productImg[0].productImg;
+    db.query(
+      "SELECT productImg FROM productInfo WHERE productCode=?",
+      [productCode],
+      function (err, productImg) {
+        let path = "public" + productImg[0].productImg;
 
-      fs.unlink(path, (err) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-      });
-      db.query(
-        "DELETE FROM product WHERE productCode=?",
-        [productCode],
-        function (err, result) {
+        fs.unlink(path, (err) => {
           if (err) {
-            throw err;
+            console.error(err);
+            return;
           }
-          db.query(
-            "DELETE FROM productInfo WHERE productCode=?",
-            [productCode],
-            function (err2, result2) {
-              if (err2) {
-                throw err2;
-              }
+        });
+        db.query(
+          "DELETE FROM product WHERE productCode=?",
+          [productCode],
+          function (err, result) {
+            if (err) {
+              throw err;
             }
-          );
-        }
-      );
-    }
-  );
-  res.redirect("/home");
+            db.query(
+              "DELETE FROM productInfo WHERE productCode=?",
+              [productCode],
+              function (err2, result2) {
+                if (err2) {
+                  throw err2;
+                }
+              }
+            );
+          }
+        );
+      }
+    );
+    res.redirect("/home");
+  }else{
+    res.send(
+      '<script type="text/javascript">alert("관리자만 이용가능합니다.."); document.location.href="/home";</script>'
+    );
+  }
 });
 
 // 관리자페이지 물품 관리 - productName(대여 물품 이름)
 app.get("/admin/manage/:name", function (req, res) {
-  var productName = req.params.name; // 전달 받은 대여 물품 이름
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  if (req.session.user_name === 'admin'){
+    var productName = req.params.name; // 전달 받은 대여 물품 이름
 
-  db.query(
-    `SELECT * FROM info WHERE productName=?`,
-    [productName],
-    function (error, productInfo) {
-      if (error) throw error; // 오류 처리
-      db.query(
-        `SELECT * FROM reservation WHERE productCode=?`,
-        [productInfo[0].productCode],
-        function (error2, reservationInfo) {
-          db.query(
-            `SELECT * FROM rent WHERE rent_state="신청완료" && productCode=?`,
-            [productInfo[0].productCode],
-            function (error3, rentInfo) {
-              res.render("rentManage.ejs", {
-                product: productInfo[0],
-                reservation: reservationInfo,
-                reservationCount: reservationInfo.length,
-                rent: rentInfo,
-                rentCount: rentInfo.length,
-              });
-            }
-          );
-        }
-      );
-    }
-  );
+    db.query(
+      `SELECT * FROM info WHERE productName=?`,
+      [productName],
+      function (error, productInfo) {
+        if (error) throw error; // 오류 처리
+        db.query(
+          `SELECT * FROM reservation WHERE productCode=?`,
+          [productInfo[0].productCode],
+          function (error2, reservationInfo) {
+            db.query(
+              `SELECT * FROM rent WHERE rent_state="신청완료" && productCode=?`,
+              [productInfo[0].productCode],
+              function (error3, rentInfo) {
+                res.render("rentManage.ejs", {
+                  product: productInfo[0],
+                  reservation: reservationInfo,
+                  reservationCount: reservationInfo.length,
+                  rent: rentInfo,
+                  rentCount: rentInfo.length,
+                });
+              }
+            );
+          }
+        );
+      }
+    );
+  }else{
+    res.send(
+      '<script type="text/javascript">alert("관리자만 이용가능합니다.."); document.location.href="/home";</script>'
+    );
+  }
 });
 
 app.use(function (req, res, next) {
@@ -450,6 +549,6 @@ app.use(function (err, req, res, next) {
   res.status(500).send("Something broke!");
 }); // Error-handling middleware...
 
-app.listen(3000, function (request, response) {
+app.listen(3000, function (req, res) {
   console.log("app listening on port 3000");
 });
