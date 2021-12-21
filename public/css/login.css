@@ -34,13 +34,3 @@
     color:#FDFDFD;
     cursor: pointer;
 }
-/*링크를 감싸는 div*/
-.find{
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-around;
-}
-.find > a{
-    text-decoration: none;
-    color: #CABBE9;
-}
