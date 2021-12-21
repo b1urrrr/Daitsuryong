@@ -67,7 +67,10 @@ app.post("/", function (req, res) {
         if (results.length > 0) {
           req.session.user_name = results[0].name; // 이름
           req.session.user_uid = results[0].memberID; // 학번
-          res.redirect("/home");
+          if (results[0].name === 'admin')
+              res.redirect("/admin");
+          else
+              res.redirect("/home");
           // res.end();
         } else {
           res.send(
@@ -345,7 +348,7 @@ app.post("/suggestion", function (req, res) {
   else{
     db.query(
       "INSERT INTO suggestion values (null, ?, date_format(NOW(), '%Y-%m-%d'), ?)",
-      [req.body.text, user],
+      [req.body.text, req.session.user_uid],
       function (err, results, fields) {
         if (err) throw err;
         res.redirect("/home");
@@ -446,7 +449,49 @@ app.get("/admin", function (req, res) {
     );
   }
 });
+// 관리자페이지 물품 관리 - productName(대여 물품 이름)
+app.get("/admin/manage/:name", function (req, res) {
+  var productName = req.params.name; // 전달 받은 대여 물품 이름
+  if (req.session.user_name === undefined){
+    res.send(
+      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
+    );
+  }
+  if (req.session.user_name === 'admin'){
+    var productName = req.params.name; // 전달 받은 대여 물품 이름
 
+    db.query(
+      `SELECT * FROM info WHERE productName=?`,
+      [productName],
+      function (error, productInfo) {
+        if (error) throw error; // 오류 처리
+        db.query(
+          `SELECT * FROM reservation WHERE productCode=?`,
+          [productInfo[0].productCode],
+          function (error2, reservationInfo) {
+            db.query(
+              `SELECT * FROM rent WHERE rent_state="신청완료" && productCode=?`,
+              [productInfo[0].productCode],
+              function (error3, rentInfo) {
+                res.render("rentManage.ejs", {
+                  product: productInfo[0],
+                  reservation: reservationInfo,
+                  reservationCount: reservationInfo.length,
+                  rent: rentInfo,
+                  rentCount: rentInfo.length,
+                });
+              }
+            );
+          }
+        );
+      }
+    );
+  }else{
+    res.send(
+      '<script type="text/javascript">alert("관리자만 이용가능합니다.."); document.location.href="/home";</script>'
+    );
+  }
+});
 // 관리자페이지 물품 삭제
 app.post("/admin", function (req, res) {
   if (req.session.user_name === undefined){
@@ -455,41 +500,37 @@ app.post("/admin", function (req, res) {
     );
   }
   if (req.session.user_name === 'admin'){
-    let productCode = req.body.productCode;
-
+    var productName = req.params.name; // 전달 받은 대여 물품 이름
+    var userVal = document.getElementById("selected").selectedIndex;
+    console.log(userVal);
     db.query(
-      "SELECT productImg FROM productInfo WHERE productCode=?",
-      [productCode],
-      function (err, productImg) {
-        let path = "public" + productImg[0].productImg;
-
-        fs.unlink(path, (err) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-        });
+      "SELECT productImg FROM info WHERE productName=?",
+      [productName],
+      function (err, productInfo) {
+          if (err) throw err;
         db.query(
-          "DELETE FROM product WHERE productCode=?",
-          [productCode],
-          function (err, result) {
-            if (err) {
-              throw err;
-            }
+          "SELECT FROM reservation WHERE productCode=?",
+          [productInfo[0].productCode],
+          function (err2, reservationInfo) {
             db.query(
-              "DELETE FROM productInfo WHERE productCode=?",
+              'DELETE FROM rent WHERE rent_status="신청완료" && productCode=? && memberID=?',
               [productCode],
-              function (err2, result2) {
-                if (err2) {
-                  throw err2;
-                }
+              [userVal],
+              function (err3, result2) {
+                res.render("rentManage.ejs", {
+                  product: productInfo[0],
+                  reservation: reservationInfo,
+                  reservationCount: reservationInfo.length,
+                  rent: rentInfo,
+                  rentCount: rentInfo.length,
+                });
               }
             );
           }
         );
       }
     );
-    res.redirect("/home");
+    res.redirect("/admin/manage/:name");
   }else{
     res.send(
       '<script type="text/javascript">alert("관리자만 이용가능합니다.."); document.location.href="/home";</script>'
@@ -542,47 +583,33 @@ app.post("/adminDecrease", function (req, res) {
   );
 });
 
-// 관리자페이지 물품 관리 - productName(대여 물품 이름)
-app.get("/admin/manage/:name", function (req, res) {
-  if (req.session.user_name === undefined){
-    res.send(
-      '<script type="text/javascript">alert("로그인 후 이용가능합니다."); document.location.href="/";</script>'
-    );
-  }
-  if (req.session.user_name === 'admin'){
-    var productName = req.params.name; // 전달 받은 대여 물품 이름
-
-    db.query(
-      `SELECT * FROM info WHERE productName=?`,
-      [productName],
-      function (error, productInfo) {
-        if (error) throw error; // 오류 처리
-        db.query(
-          `SELECT * FROM reservation WHERE productCode=?`,
-          [productInfo[0].productCode],
-          function (error2, reservationInfo) {
-            db.query(
-              `SELECT * FROM rent WHERE rent_state="신청완료" && productCode=?`,
-              [productInfo[0].productCode],
-              function (error3, rentInfo) {
-                res.render("rentManage.ejs", {
-                  product: productInfo[0],
-                  reservation: reservationInfo,
-                  reservationCount: reservationInfo.length,
-                  rent: rentInfo,
-                  rentCount: rentInfo.length,
-                });
-              }
-            );
-          }
-        );
+//관리자페이지 예약취소
+app.post("/reserve_cancel_specific", function (req, res) {
+  var productName = req.params.name; // 전달 받은 대여 물품 이름
+  function selectfunc() {
+    var selectedValue = document.getElementById("selected").value;
+    console.log(selectedValue);
+  }  
+  db.query(
+    "SELECT productNum FROM product WHERE productStatus=1 && productCode=?",
+    [req.body.product[0]],
+    function (err, productNum) {
+      if (err) {
+        throw err;
       }
-    );
-  }else{
-    res.send(
-      '<script type="text/javascript">alert("관리자만 이용가능합니다.."); document.location.href="/home";</script>'
-    );
-  }
+      db.query(
+        "DELETE FROM product WHERE productNum=? && memberID=?",
+        [productNum[0].productNum],
+        [selectedValue],
+        function (err, result) {
+          if (err) {
+            throw err;
+          }
+          res.redirect("/admin");
+        }
+      );
+    }
+  );
 });
 
 app.use(function (req, res, next) {
