@@ -483,6 +483,7 @@ app.get("/admin/manage/:name", function (req, res) {
     );
   }
 });
+
 // 관리자페이지 물품 삭제
 app.post("/admin", function (req, res) {
   if (req.session.user_name === undefined) {
@@ -491,37 +492,41 @@ app.post("/admin", function (req, res) {
     );
   }
   if (req.session.user_name === "admin") {
-    var productName = req.params.name; // 전달 받은 대여 물품 이름
-    var userVal = document.getElementById("selected").selectedIndex;
-    console.log(userVal);
+    let productCode = req.body.productCode;
+
     db.query(
-      "SELECT productImg FROM info WHERE productName=?",
-      [productName],
-      function (err, productInfo) {
-        if (err) throw err;
+      "SELECT productImg FROM productInfo WHERE productCode=?",
+      [productCode],
+      function (err, productImg) {
+        let path = "public" + productImg[0].productImg;
+
+        fs.unlink(path, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        });
         db.query(
-          "DELETE FROM reservation WHERE productCode=?",
-          [productInfo[0].productCode],
-          function (err2, reservationInfo) {
+          "DELETE FROM product WHERE productCode=?",
+          [productCode],
+          function (err, result) {
+            if (err) {
+              throw err;
+            }
             db.query(
-              'DELETE FROM rent WHERE rent_status="신청완료" && productCode=? && memberID=?',
+              "DELETE FROM productInfo WHERE productCode=?",
               [productCode],
-              [userVal],
-              function (err3, result2) {
-                res.render("rentManage.ejs", {
-                  product: productInfo[0],
-                  reservation: reservationInfo,
-                  reservationCount: reservationInfo.length,
-                  rent: rentInfo,
-                  rentCount: rentInfo.length,
-                });
+              function (err2, result2) {
+                if (err2) {
+                  throw err2;
+                }
               }
             );
           }
         );
       }
     );
-    res.redirect("/admin/manage/:name");
+    res.redirect("/home");
   } else {
     res.send(
       '<script type="text/javascript">alert("관리자만 이용가능합니다.."); document.location.href="/home";</script>'
