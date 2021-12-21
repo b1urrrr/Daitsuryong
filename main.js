@@ -500,41 +500,37 @@ app.post("/admin", function (req, res) {
     );
   }
   if (req.session.user_name === 'admin'){
-    let productCode = req.body.productCode;
-
+    var productName = req.params.name; // 전달 받은 대여 물품 이름
+    var userVal = document.getElementById("selected").selectedIndex;
+    console.log(userVal);
     db.query(
-      "SELECT productImg FROM productInfo WHERE productCode=?",
-      [productCode],
-      function (err, productImg) {
-        let path = "public" + productImg[0].productImg;
-
-        fs.unlink(path, (err) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-        });
+      "SELECT productImg FROM info WHERE productName=?",
+      [productName],
+      function (err, productInfo) {
+          if (err) throw err;
         db.query(
-          "DELETE FROM product WHERE productCode=?",
-          [productCode],
-          function (err, result) {
-            if (err) {
-              throw err;
-            }
+          "SELECT FROM reservation WHERE productCode=?",
+          [productInfo[0].productCode],
+          function (err2, reservationInfo) {
             db.query(
-              "DELETE FROM productInfo WHERE productCode=?",
+              'DELETE FROM rent WHERE rent_status="신청완료" && productCode=? && memberID=?',
               [productCode],
-              function (err2, result2) {
-                if (err2) {
-                  throw err2;
-                }
+              [userVal],
+              function (err3, result2) {
+                res.render("rentManage.ejs", {
+                  product: productInfo[0],
+                  reservation: reservationInfo,
+                  reservationCount: reservationInfo.length,
+                  rent: rentInfo,
+                  rentCount: rentInfo.length,
+                });
               }
             );
           }
         );
       }
     );
-    res.redirect("/home");
+    res.redirect("/admin/manage/:name");
   }else{
     res.send(
       '<script type="text/javascript">alert("관리자만 이용가능합니다.."); document.location.href="/home";</script>'
@@ -587,7 +583,34 @@ app.post("/adminDecrease", function (req, res) {
   );
 });
 
-
+//관리자페이지 예약취소
+app.post("/reserve_cancel_specific", function (req, res) {
+  var productName = req.params.name; // 전달 받은 대여 물품 이름
+  function selectfunc() {
+    var selectedValue = document.getElementById("selected").value;
+    console.log(selectedValue);
+  }  
+  db.query(
+    "SELECT productNum FROM product WHERE productStatus=1 && productCode=?",
+    [req.body.product[0]],
+    function (err, productNum) {
+      if (err) {
+        throw err;
+      }
+      db.query(
+        "DELETE FROM product WHERE productNum=? && memberID=?",
+        [productNum[0].productNum],
+        [selectedValue],
+        function (err, result) {
+          if (err) {
+            throw err;
+          }
+          res.redirect("/admin");
+        }
+      );
+    }
+  );
+});
 
 app.use(function (req, res, next) {
   res.status(404).send("Sorry can not found that!");

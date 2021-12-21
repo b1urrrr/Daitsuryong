@@ -21,7 +21,7 @@
                 &nbsp;&nbsp;예약 : <%=reservationCount%>명
               </h5>
               <% if (reservationCount != 0) {%>
-              <select id="selected" class="select">
+              <select id="selected" class="select" onchage="selectfunc">
                 <% for (var i = 0; i < reservationCount; i++) {%>
                 <option>
                   &nbsp;&nbsp;&nbsp;<%=reservation[i].memberID%>&nbsp;&nbsp;&nbsp;
