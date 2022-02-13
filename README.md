@@ -52,6 +52,7 @@
   ## 7️⃣ 작품 설명 자료
 - [다있수룡 최종보고서](https://github.com/b1urrrr/Daitsuryong/files/8055666/12_.pdf)
 - [다있수룡 최종발표자료](https://github.com/b1urrrr/Daitsuryong/files/8055669/_._12._.pdf)
+- [다있수룡 SQL 파일](https://github.com/b1urrrr/Daitsuryong/files/8055706/12_DB.SQL.txt)
 - [다있수룡 실행 가이드](https://github.com/b1urrrr/Daitsuryong/files/8055665/12_.pdf)
 - [다있수룡 시연 영상](https://user-images.githubusercontent.com/70993562/153756777-e58f96f8-afd4-4591-8559-d2a2bbb3a528.mp4)
   
