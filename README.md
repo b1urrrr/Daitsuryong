@@ -47,7 +47,7 @@
 | 프론트엔드 | HTML, CSS, EJS |
 | 백엔드 | Javascript, node.js, GCP, mysql |
 | UI 및 UX | Figma |
-| 협업 및 버전 관리 | Git, GitHub |
+| 협업 및 버전 관리 | Git, GitHub, Google Docs |
 
   ## 7️⃣ 작품 설명 자료
 - [다있수룡 최종보고서](https://github.com/b1urrrr/Daitsuryong/files/8055666/12_.pdf)
