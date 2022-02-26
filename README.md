@@ -44,8 +44,8 @@
   ## 6️⃣ 기술 스택
 | 분야 | Tools |
 | --- | --- |
-| 프론트엔드 | HTML, CSS, EJS |
-| 백엔드 | Javascript, node.js, GCP, mysql |
+| 프론트엔드 | EJS, CSS |
+| 백엔드 | EJS, node.js, GCP, mysql |
 | UI 및 UX | Figma |
 | 협업 및 버전 관리 | Git, GitHub, Google Docs |
 
